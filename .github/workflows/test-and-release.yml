@@ -82,7 +82,7 @@ jobs:
           # Then uncomment and customize the following block:
           sentry: true
           sentry-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          sentry-project: "iobroker-woso_mitsu_aircon_rac"
-          sentry-version-prefix: "iobroker.woso_mitsu_aircon_rac"
+          sentry-project: "iobroker-mhi_aircon"
+          sentry-version-prefix: "iobroker.mhi_aircon"
           # If your sentry project is linked to a GitHub repository, you can enable the following option
           # sentry-github-integration: true

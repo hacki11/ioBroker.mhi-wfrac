@@ -1,19 +1,19 @@
 {
-  "name": "iobroker.woso_mitsu_aircon_rac",
+  "name": "iobroker.mhi_aircon",
   "version": "1.0.2",
   "description": "Mitsubishi Aircon Adapter for RAC-WiFi-Modules",
   "author": {
     "name": "wolkeSoftware",
     "email": "wolkesoftware@gmail.com"
   },
-  "homepage": "https://github.com/wolkeSoftware/ioBroker.woso_mitsu_aircon_rac",
+  "homepage": "https://github.com/W0w3/ioBroker.mhi_aircon",
   "license": "MIT",
   "keywords": [
     "Mitsubishi Aircon"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/wolkeSoftware/ioBroker.woso_mitsu_aircon_rac.git"
+    "url": "https://github.com/W0w3/ioBroker.mhi_aircon.git"
   },
   "engines": {
     "node": ">= 14"
@@ -66,7 +66,7 @@
     "release": "release-script"
   },
   "bugs": {
-    "url": "https://github.com/wolkeSoftware/ioBroker.woso_mitsu_aircon_rac/issues"
+    "url": "https://github.com/W0w3/ioBroker.mhi_aircon/issues"
   },
   "readmeFilename": "README.md"
 }

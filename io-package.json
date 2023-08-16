@@ -1,6 +1,6 @@
 {
     "common": {
-        "name": "woso_mitsu_aircon_rac",
+        "name": "mhi_aircon",
         "version": "1.0.2",
         "news": {
             "1.0.2": {
@@ -49,15 +49,15 @@
             "wolkeSoftware <wolkesoftware@gmail.com>"
         ],
         "keywords": [
-            "Mitsubishi Aircon"
+            "Mitsubishi Aircon", "MHI", "Air Condition", "Mitsubishi Havy Industries"
         ],
         "license": "MIT",
         "platform": "Javascript/Node.js",
         "main": "main.js",
-        "icon": "woso_mitsu_aircon_rac.png",
+        "icon": "mhi_aircon.png",
         "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/wolkeSoftware/ioBroker.woso_mitsu_aircon_rac/main/admin/woso_mitsu_aircon_rac.png",
-        "readme": "https://github.com/wolkeSoftware/ioBroker.woso_mitsu_aircon_rac/blob/main/README.md",
+        "extIcon": "https://github.com/W0w3/ioBroker.mhi_aircon/blob/main/admin/mhi_aircon.png",
+        "readme": "https://github.com/W0w3/ioBroker.mhi_aircon/blob/main/README.md",
         "loglevel": "info",
         "mode": "daemon",
         "type": "climate-control",

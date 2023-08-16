@@ -1,7 +1,7 @@
 {
     "expert": "yes",
     "cli": false,
-    "adapterName": "woso_mitsu_aircon_rac",
+    "adapterName": "mhi_aircon",
     "title": "Mitsubishi Aircon with RAC-WiFi-Modules",
     "description": "Mitsubishi Aircon Adapter for RAC-WiFi-Modules",
     "keywords": [

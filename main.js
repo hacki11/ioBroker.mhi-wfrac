@@ -4,16 +4,12 @@
  * Created with @iobroker/create-adapter v2.3.0
  */
 
-// The adapter-core module gives you access to the core ioBroker functions
-// you need to create an adapter
 const utils = require("@iobroker/adapter-core");
 const AirconStatClass = require("./lib/AirconStat.js");
 const AirconCoderClass = require("./lib/AirconStatCoder.js");
 
 const KEY_AIRCON_ID = "airconId";
 const KEY_AIRCON_STAT = "airconStat";
-//const KEY_AUTO_HEATING = "autoHeating";
-//const KEY_LED_STAT = "ledStat";
 
 const OPERATORID = "d2bc4571-1cea-4858-b0f2-34c18bef1901";
 const TIMEZONE = "Europe/Berlin";
@@ -25,20 +21,11 @@ const COMMAND_GET_DEVICE_INFO = "getDeviceInfo";
 const COMMAND_SET_AIRCON_STAT = "setAirconStat";
 const COMMAND_UPDATE_ACCOUNT_INFO = "updateAccountInfo";
 const COMMAND_GET_AIRCON_STAT = "getAirconStat";
-/*
-const COMMAND_SET_OPTION_SETTING = "setOptionSetting";
-const COMMAND_UPDATE_FIRMWARE = "updateFirmware";
-*/
 
-const delay = (delayInms) => {
-    return new Promise(resolve => setTimeout(resolve, delayInms));
-};
 
-// Load your modules here, e.g.:
-//const fs = require("fs");
 const axios = require("axios");
 
-class WosoMitsuAirconRac extends utils.Adapter {
+class mhi_aircon extends utils.Adapter {
 
     /**
      * @param {Partial<utils.AdapterOptions>} [options={}]
@@ -50,8 +37,6 @@ class WosoMitsuAirconRac extends utils.Adapter {
         });
         this.on("ready", this.onReady.bind(this));
         this.on("stateChange", this.onStateChange.bind(this));
-        // this.on("objectChange", this.onObjectChange.bind(this));
-        // this.on("message", this.onMessage.bind(this));
         this.on("unload", this.onUnload.bind(this));
         this.AirconStat = new AirconStatClass();
         this.DeviceId = AIRCON_DEVICEID;
@@ -80,20 +65,8 @@ class WosoMitsuAirconRac extends utils.Adapter {
         // Reset the connection indicator during startup
         this.setState("info.connection", false, true);
 
-        // The adapters config (in the instance object everything under the attribute "native") is accessible via
-        // this.config:
-        this.log.info("woso::config ip: " + this.config.ip);
-        this.log.info("woso::config timer: " + this.config.timer);
-
-        this.acCoder.setLogger(this.log);
-
-        //const horig="AACymKf/AAAAAAASCgAAAAAAAf////9/pgAAEBAn/wAAAAAAAgAAAAAAAAH/////A1Y=";
-        //const hown="AADDssKYwqjDvwAAAAAAEgoAAAAAAAHDv8O/w7/DvygXAAAQECjDvwAACAAAAgAAAAAAAAHDv8O/w7/Dv2fDmw==";
-        //this.acCoder.check_setAircon(horig, hown);
 
         await this.initIOBStates();
-
-
         await this.register_airco();
 
         if (this.AirconId!="") {
@@ -104,37 +77,8 @@ class WosoMitsuAirconRac extends utils.Adapter {
 
         await this.setIOBStates();
 
-        /*
-        For every state in the system there has to be also an object of type state
-        Here a simple template for a boolean variable named "testVariable"
-        Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
-        */
-        // You can also add a subscription for multiple states. The following line watches all states starting with "lights."
-        // this.subscribeStates("lights.*");
-        // Or, if you really must, you can also watch all states. Don't do this if you don't need to. Otherwise this will cause a lot of unnecessary load on the system:
-        // this.subscribeStates("*");
-
-        /*
-            setState examples
-            you will notice that each setState will cause the stateChange event to fire (because of above subscribeStates cmd)
-        */
-        // the variable testVariable is set to true as command (ack=false)
 
         await this.setIOBStates();
-
-        // same thing, but the value is flagged "ack"
-        // ack should be always set to true if the value is received from or acknowledged from the target system
-        // await this.setStateAsync("testVariable", { val: true, ack: true });
-
-        // same thing, but the state is deleted after 30s (getState will return null afterwards)
-        // await this.setStateAsync("testVariable", { val: true, ack: true, expire: 30 });
-
-        // examples for the checkPassword/checkGroup functions
-        //let result = await this.checkPasswordAsync("admin", "iobroker");
-        //this.log.info("check user admin pw iobroker: " + result);
-
-        //result = await this.checkGroupAsync("admin", "admin");
-        //this.log.info("check group user admin group admin: " + result);
 
         //get data from aircon and start timer
         if (this.config.timer > 0) {
@@ -661,27 +605,6 @@ class WosoMitsuAirconRac extends utils.Adapter {
         }
     }
 
-    // If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
-    // /**
-    //  * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
-    //  * Using this method requires "common.messagebox" property to be set to true in io-package.json
-    //  * @param {ioBroker.Message} obj
-    //  */
-    // onMessage(obj) {
-    //     if (typeof obj === "object" && obj.message) {
-    //         if (obj.command === "send") {
-    //             // e.g. send email or pushover or whatever
-    //             this.log.info("send command");
-
-    //             // Send response in callback if required
-    //             if (obj.callback) this.sendTo(obj.from, obj.command, "Message received", obj.callback);
-    //         }
-    //     }
-    // }
-
-    ////Data-Transfer-Functions
-
-
     async _post(cmd, contents) {
         await delay(2050);
         const url = "http://"+this.config.ip+":"+AIRCON_PORT;
@@ -836,8 +759,8 @@ if (require.main !== module) {
     /**
      * @param {Partial<utils.AdapterOptions>} [options={}]
      */
-    module.exports = (options) => new WosoMitsuAirconRac(options);
+    module.exports = (options) => new mhi_aircon(options);
 } else {
     // otherwise start the instance directly
-    new WosoMitsuAirconRac();
+    new mhi_aircon();
 }

@@ -23,7 +23,6 @@ const AIRCON_DEVICEID = "18547566-315b-4941-bb9b-90cedef4bbb7";
 const COMMAND_DELETE_ACCOUNT_INFO = "deleteAccountInfo";
 const COMMAND_GET_DEVICE_INFO = "getDeviceInfo";
 const COMMAND_SET_AIRCON_STAT = "setAirconStat";
-const COMMAND_SET_NETWORK_INFO = "setNetworkInfo";
 const COMMAND_UPDATE_ACCOUNT_INFO = "updateAccountInfo";
 const COMMAND_GET_AIRCON_STAT = "getAirconStat";
 /*
@@ -685,7 +684,7 @@ class WosoMitsuAirconRac extends utils.Adapter {
 
     async _post(cmd, contents) {
         await delay(2050);
-        const url = "http://"+this.config.ip+":"+AIRCON_PORT;//+"/beaver/command/"+cmd;
+        const url = "http://"+this.config.ip+":"+AIRCON_PORT;
         const millis = Date.now();
         const t = Math.floor(millis / 1000);
 
@@ -720,12 +719,12 @@ class WosoMitsuAirconRac extends utils.Adapter {
             console.log(util.inspect(response.data, { showHidden: false, depth: null }));
         } catch (error) {
             ret.error = error;
-            console.error(`_post | Could not get Data: ${error}`);
-            if (error.response) {
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-            }
+            this.log.error(`_post | Could not get Data: ${error}`);
+            /*if (error.response) {
+                this.log.error(error.response.data);
+                this.log.error(error.response.status);
+                this.log.error(error.response.headers);
+            }*/
         }
         return ret;
     }
@@ -765,15 +764,6 @@ class WosoMitsuAirconRac extends utils.Adapter {
         return await this._post(COMMAND_DELETE_ACCOUNT_INFO, contents);
     }
 
-    async set_network_info(airco_id) {
-        //Update the account info on the airco (sets to operator id of the device)
-        const contents = {
-            "ssid": airco_id,
-            "netPass": "192.168.178.12"
-        };
-        return await this._post(COMMAND_SET_NETWORK_INFO, contents);
-    }
-
     async register_airco() {
         try {
             //this.log.info("regData:"+JSON.stringify(AirconItem));
@@ -787,26 +777,11 @@ class WosoMitsuAirconRac extends utils.Adapter {
             //this.log.info("regData:"+JSON.stringify(AirconItem.airconData));
             //var res = await delete_account_info(AirconItem.airconData.airconId);exit();
             await this.update_account_info();
-            //this.log.info("reg:"+JSON.stringify(res.response));
-            /*
-            if (res.response.result == 0) {
-                const res2 = await this.set_network_info(this.AirconId);
-            }
-             */
+
         } catch(e) {
             this.log.error(e);
             this.log.info(JSON.stringify(this.lastAirconData));
         }
-        //this.log.info("regres:"+res.response.result);
-
-        /*
-        //following Code is from JAVA, but no set_network is working and its not part of the python-scripts
-        if (res.response.result == 0) {
-            const res2 = await this.set_network_info(AirconItem.airconData.airconId, AirconItem.ip);
-        }
-        return AirconItem;
-
-         */
     }
 
     async getDataFromMitsu() {

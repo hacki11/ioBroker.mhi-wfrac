@@ -23,6 +23,9 @@ const COMMAND_UPDATE_ACCOUNT_INFO = "updateAccountInfo";
 const COMMAND_GET_AIRCON_STAT = "getAirconStat";
 
 
+const delay = (delayInms) => {
+    return new Promise(resolve => setTimeout(resolve, delayInms));
+};
 const axios = require("axios");
 
 class mhi_aircon extends utils.Adapter {
@@ -639,7 +642,6 @@ class mhi_aircon extends utils.Adapter {
             this.lastResponse = ret.response;
             this.log.info("_post | return: "+cmd+"::"+JSON.stringify(ret.response));
             this.log.info("_post | RESULT:"+JSON.stringify(response.data));
-            console.log(util.inspect(response.data, { showHidden: false, depth: null }));
         } catch (error) {
             ret.error = error;
             this.log.error(`_post | Could not get Data: ${error}`);

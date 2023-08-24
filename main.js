@@ -7,6 +7,7 @@
 const utils = require("@iobroker/adapter-core");
 const AirconStatClass = require("./lib/AirconStat.js");
 const AirconCoderClass = require("./lib/AirconStatCoder.js");
+const axios = require("axios");
 
 const KEY_AIRCON_ID = "airconId";
 const KEY_AIRCON_STAT = "airconStat";
@@ -26,7 +27,6 @@ const COMMAND_GET_AIRCON_STAT = "getAirconStat";
 const delay = (delayInms) => {
     return new Promise(resolve => setTimeout(resolve, delayInms));
 };
-const axios = require("axios");
 
 class mhi_aircon extends utils.Adapter {
 
@@ -67,20 +67,20 @@ class mhi_aircon extends utils.Adapter {
 
         // Reset the connection indicator during startup
         this.setState("info.connection", false, true);
+        this.log.debug("onReady");
 
-
+        this.log.debug("onReady::initIOBStates");
         await this.initIOBStates();
+        this.log.debug("onReady::register_airco");
         await this.register_airco();
 
         if (this.AirconId!="") {
             this.setState("info.connection", true, true);
         }
 
+        this.log.debug("onReady::getDataFromMitsu");
         await this.getDataFromMitsu();
-
-        await this.setIOBStates();
-
-
+        this.log.debug("onReady::setIOBStates");
         await this.setIOBStates();
 
         //get data from aircon and start timer
@@ -142,7 +142,6 @@ class mhi_aircon extends utils.Adapter {
         await this.setStateAsync("Preset-Temp", this.AirconStat.presetTemp, true);
         await this.setStateAsync("Winddirection LR", this.AirconStat.windDirectionLR, true);
         await this.setStateAsync("Winddirection UD", this.AirconStat.windDirectionUD, true);
-        //await this.setStateAsync("Auto-Heating", this.AirconStat.isAutoHeating, true);
         await this.setStateAsync("Cool-Hot-Judge", this.AirconStat.coolHotJudge, true);
         await this.setStateAsync("Electric", this.AirconStat.electric, true);
         await this.setStateAsync("Entrust", this.AirconStat.entrust, true);
@@ -691,21 +690,16 @@ class mhi_aircon extends utils.Adapter {
 
     async register_airco() {
         try {
-            //this.log.info("regData:"+JSON.stringify(AirconItem));
             this.lastAirconData = await this.getDeviceInfoFromMitsu();
             this.AirconId = this.lastAirconData.airconId;
             this.AirconApMode = this.lastAirconData.apMode;
             this.AirconMac = this.lastAirconData.macAddress;
 
             //this.delete_account_info();
-
-            //this.log.info("regData:"+JSON.stringify(AirconItem.airconData));
-            //var res = await delete_account_info(AirconItem.airconData.airconId);exit();
             await this.update_account_info();
 
         } catch(e) {
             this.log.error(e);
-            this.log.info(JSON.stringify(this.lastAirconData));
         }
     }
 
@@ -724,7 +718,6 @@ class mhi_aircon extends utils.Adapter {
             this.connected_accounts = ret.response.contents.numOfAccount;
             this.ledStat = ret.response.contents.ledStat;
             this.autoHeating = ret.response.contents.autoHeating;
-            //this.AirconId = ret.response.contents.airconId;
 
         } catch (error) {
             this.log.error(`Could not get Data: ${error}`);

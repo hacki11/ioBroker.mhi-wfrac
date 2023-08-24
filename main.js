@@ -695,22 +695,20 @@ class mhi_aircon extends utils.Adapter {
     }
 
     async sendDataToMitsu() {
-        let ret = {error:""};
-        const command = this.acCoder.toBase64(this.AirconStat);
         const contents = {
             [KEY_AIRCON_ID]: this.AirconId,
-            [KEY_AIRCON_STAT]: command
+            [KEY_AIRCON_STAT]: this.acCoder.toBase64(this.AirconStat)
         };
-        try {
-            ret = await this._post(COMMAND_SET_AIRCON_STAT, contents);
-            if (ret.error === "") {
-                this.acCoder.fromBase64(this.AirconStat, ret.response.contents.airconStat);
-            }
-        } catch (error) {
-            this.log.error(`Could not send Data: ${error}`);
-            ret.error = error;
-        }
-        return ret;
+
+        await this._post(COMMAND_SET_AIRCON_STAT, contents)
+            .then((ret) => {
+                if (ret.error === "") {
+                    this.acCoder.fromBase64(this.AirconStat, ret.response.contents.airconStat);
+                }
+            })
+            .catch(function (error) {
+                this.log.error(`Could not send Data: ${error}`);
+            });
     }
 
     ////End of Data-Transfer-Functions

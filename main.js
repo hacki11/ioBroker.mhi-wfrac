@@ -84,7 +84,7 @@ class mhi_aircon extends utils.Adapter {
 
         //get data from aircon and start timer
         if (this.config.timer > 0) {
-            this.startTimerAction();
+            this.getDataFromAircon();
         }
     }
 
@@ -538,12 +538,7 @@ class mhi_aircon extends utils.Adapter {
     }
 
     startTimer() {
-        this.timer = setTimeout(() => this.startTimerAction(), (this.config.timer * 60000));
-    }
-
-    async startTimerAction() {
-        await this.getDataFromAircon();
-        this.startTimer();
+        this.timer = setTimeout(() => this.getDataFromAircon(), (this.config.timer * 60000));
     }
 
     async getDataFromAircon() {
@@ -551,6 +546,7 @@ class mhi_aircon extends utils.Adapter {
             await this.getDataFromMitsu();
             await this.setIOBStates();
         }
+        this.startTimer();
     }
 
     /**

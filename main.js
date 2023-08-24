@@ -130,31 +130,35 @@ class mhi_aircon extends utils.Adapter {
     }
 
     async setIOBStates() {
-        await this.setStateAsync("inOperation", this.AirconStat.operation, true);
-        await this.setStateAsync("OperationMode", this.AirconStat.operationMode, true);
-        await this.setStateAsync("Airflow", this.AirconStat.airFlow, true);
-        await this.setStateAsync("ModelNo", "" + this.AirconStat.modelNo, true);
-        await this.setStateAsync("Indoor-Temp", this.AirconStat.indoorTemp, true);
-        await this.setStateAsync("Outdoor-Temp", this.AirconStat.outdoorTemp, true);
-        await this.setStateAsync("Preset-Temp", this.AirconStat.presetTemp, true);
-        await this.setStateAsync("Winddirection LR", this.AirconStat.windDirectionLR, true);
-        await this.setStateAsync("Winddirection UD", this.AirconStat.windDirectionUD, true);
-        await this.setStateAsync("Cool-Hot-Judge", this.AirconStat.coolHotJudge, true);
-        await this.setStateAsync("Electric", this.AirconStat.electric, true);
-        await this.setStateAsync("Entrust", this.AirconStat.entrust, true);
-        await this.setStateAsync("Error-Code", this.AirconStat.errorCode, true);
-        await this.setStateAsync("Self-Clean-Operation", this.AirconStat.isSelfCleanOperation, true);
-        await this.setStateAsync("Self-Clean-Reset", this.AirconStat.isSelfCleanReset, true);
-        await this.setStateAsync("Vacant", this.AirconStat.isVacantProperty, true);
-        await this.setStateAsync("AP-Mode", this.AirconApMode, true);
-        await this.setStateAsync("Aircon-ID", this.AirconId, true);
-        await this.setStateAsync("Aircon-MAC-Address", this.AirconMac, true);
-        await this.setStateAsync("LED-Stat", this.ledStat, true);
-        await this.setStateAsync("Firmware-Type", this.firmwareType, true);
-        await this.setStateAsync("Wireless-Firmware-Version", this.firmwareVersion_wireless, true);
-        await this.setStateAsync("MCU-Firmware-Version", this.firmwareVersion_mcu, true);
-        await this.setStateAsync("Accounts", this.connected_accounts, true);
-        await this.setStateAsync("Auto-Heating", this.autoHeating, true);
+        try{
+            await this.setStateAsync("inOperation", this.AirconStat.operation, true);
+            await this.setStateAsync("OperationMode", this.AirconStat.operationMode, true);
+            await this.setStateAsync("Airflow", this.AirconStat.airFlow, true);
+            await this.setStateAsync("ModelNo", "" + this.AirconStat.modelNo, true);
+            await this.setStateAsync("Indoor-Temp", this.AirconStat.indoorTemp, true);
+            await this.setStateAsync("Outdoor-Temp", this.AirconStat.outdoorTemp, true);
+            await this.setStateAsync("Preset-Temp", this.AirconStat.presetTemp, true);
+            await this.setStateAsync("Winddirection LR", this.AirconStat.windDirectionLR, true);
+            await this.setStateAsync("Winddirection UD", this.AirconStat.windDirectionUD, true);
+            await this.setStateAsync("Cool-Hot-Judge", this.AirconStat.coolHotJudge, true);
+            await this.setStateAsync("Electric", this.AirconStat.electric, true);
+            await this.setStateAsync("Entrust", this.AirconStat.entrust, true);
+            await this.setStateAsync("Error-Code", this.AirconStat.errorCode, true);
+            await this.setStateAsync("Self-Clean-Operation", this.AirconStat.isSelfCleanOperation, true);
+            await this.setStateAsync("Self-Clean-Reset", this.AirconStat.isSelfCleanReset, true);
+            await this.setStateAsync("Vacant", this.AirconStat.isVacantProperty, true);
+            await this.setStateAsync("AP-Mode", this.AirconApMode, true);
+            await this.setStateAsync("Aircon-ID", this.AirconId, true);
+            await this.setStateAsync("Aircon-MAC-Address", this.AirconMac, true);
+            await this.setStateAsync("LED-Stat", this.ledStat, true);
+            await this.setStateAsync("Firmware-Type", this.firmwareType, true);
+            await this.setStateAsync("Wireless-Firmware-Version", this.firmwareVersion_wireless, true);
+            await this.setStateAsync("MCU-Firmware-Version", this.firmwareVersion_mcu, true);
+            await this.setStateAsync("Accounts", this.connected_accounts, true);
+            await this.setStateAsync("Auto-Heating", this.autoHeating, true);
+        } catch(e){
+            this.log.error(JSON.stringify(this.AirconStat));
+        }
     }
 
     async initIOBStates() {
@@ -599,23 +603,26 @@ class mhi_aircon extends utils.Adapter {
         }
 
         const ret = {error:"", response:{}, body:""};
-        try {
-            this.log.debug("_post | url:" + url + "::data: " + cmd + "::" + JSON.stringify(data));
-            const response = await axios.post(url, data, {
-                timeout: 5000, // Set a timeout of 5 seconds
-                headers: {
-                    "Connection": "close",
-                    "Content-Type": "application/json;charset=UTF-8",
-                    "Access-Control-Allow-Origin": "*",
-                    "accept": "application/json",
-                }
+        this.log.debug("_post | url:" + url + "::data: " + cmd + "::" + JSON.stringify(data));
+
+        await axios.post(url, data, {
+            timeout: 5000, // Set a timeout of 5 seconds
+            headers: {
+                "Connection": "close",
+                "Content-Type": "application/json;charset=UTF-8",
+                "Access-Control-Allow-Origin": "*",
+                "accept": "application/json",
+            }
+        })
+            .then((response) => {
+                ret.response = response.data;
+                this.log.debug("_post | return: " + cmd + "::" + JSON.stringify(response.data));
+            })
+            .catch((error) => {
+                ret.error = error;
+                this.log.debug(`_post | Could not get Data: ${error}`);
             });
-            ret.response = response.data;
-            this.log.debug("_post | return: " + cmd + "::" + JSON.stringify(ret.response));
-        } catch (error) {
-            ret.error = error;
-            this.log.debug(`_post | Could not get Data: ${error}`);
-        }
+
         return ret;
     }
 
@@ -627,18 +634,18 @@ class mhi_aircon extends utils.Adapter {
             "remote": 0,
             "timezone": TIMEZONE
         };
-        return await this._post(COMMAND_UPDATE_ACCOUNT_INFO, contents);
+        await this._post(COMMAND_UPDATE_ACCOUNT_INFO, contents);
     }
 
     async register_airco() {
         await this._post(COMMAND_GET_DEVICE_INFO)
-            .then((ret) => {
+            .then(async (ret) => {
                 if (ret.error === "") {
-                    this.AirconId = ret.response.airconId;
-                    this.AirconApMode = ret.response.apMode;
-                    this.AirconMac = ret.response.macAddress;
+                    this.AirconId = ret.response.contents.airconId;
+                    this.AirconApMode = ret.response.contents.apMode;
+                    this.AirconMac = ret.response.contents.macAddress;
 
-                    this.update_account_info();
+                    await this.update_account_info();
                 }
             })
             .catch((error) => { this.log.error(error); });

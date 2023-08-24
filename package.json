@@ -1,6 +1,6 @@
 {
   "name": "iobroker.mhi_aircon",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Mitsubishi Aircon Adapter for RAC-WiFi-Modules",
   "author": {
     "name": "wolkeSoftware",

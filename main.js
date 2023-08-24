@@ -64,7 +64,6 @@ class mhi_aircon extends utils.Adapter {
 
         // Reset the connection indicator during startup
         this.setState("info.connection", false, true);
-        this.log.debug("onReady");
 
         this.log.debug("onReady::initIOBStates");
         await this.initIOBStates();
@@ -73,16 +72,16 @@ class mhi_aircon extends utils.Adapter {
 
         if (this.AirconId != "") {
             this.setState("info.connection", true, true);
-        }
 
-        this.log.debug("onReady::getDataFromMitsu");
-        await this.getDataFromMitsu();
-        this.log.debug("onReady::setIOBStates");
-        await this.setIOBStates();
+            this.log.debug("onReady::getDataFromMitsu");
+            await this.getDataFromMitsu();
+            this.log.debug("onReady::setIOBStates");
+            await this.setIOBStates();
 
-        //get data from aircon and start timer
-        if (this.config.timer > 0) {
-            this.getDataFromAircon();
+            //get data from aircon and start timer
+            if (this.config.timer > 0) {
+                this.getDataFromAircon();
+            }
         }
     }
 
@@ -539,16 +538,12 @@ class mhi_aircon extends utils.Adapter {
 
     }
 
-    startTimer() {
-        this.timer = setTimeout(() => this.getDataFromAircon(), (this.config.timer * 60000));
-    }
-
     async getDataFromAircon() {
         if (this.AirconId != "") {
             await this.getDataFromMitsu();
             await this.setIOBStates();
         }
-        this.startTimer();
+        setTimeout(() => this.getDataFromAircon(), (this.config.timer * 60000));
     }
 
     /**
@@ -602,7 +597,7 @@ class mhi_aircon extends utils.Adapter {
             data["contents"] = contents;
         }
 
-        const ret = {error:"", response:{}, body:""};
+        const ret = {error:"", response:{}};
         this.log.debug("_post | url:" + url + "::data: " + cmd + "::" + JSON.stringify(data));
 
         await axios.post(url, data, {
@@ -641,11 +636,14 @@ class mhi_aircon extends utils.Adapter {
         await this._post(COMMAND_GET_DEVICE_INFO)
             .then(async (ret) => {
                 if (ret.error === "") {
+                    this.log.debug("register_airco | return: " + JSON.stringify(ret));
                     this.AirconId = ret.response.contents.airconId;
                     this.AirconApMode = ret.response.contents.apMode;
                     this.AirconMac = ret.response.contents.macAddress;
 
                     await this.update_account_info();
+                } else {
+                    this.log.error("Failed register device! | " + JSON.stringify(ret));
                 }
             })
             .catch((error) => { this.log.error(error); });
@@ -659,6 +657,8 @@ class mhi_aircon extends utils.Adapter {
             .then((ret) => {
                 if (ret.error === "") {
                     this.acCoder.fromBase64(this.AirconStat, ret.response.contents.airconStat);
+                    this.log.debug("getDataFromMitsu | AirconStat::" + JSON.stringify(this.AirconStat));
+
                     this.firmwareVersion_wireless = ret.response.contents.wireless.firmVer;
                     this.firmwareVersion_mcu = ret.response.contents.mcu.firmVer;
                     this.firmwareType = ret.response.contents.firmType;

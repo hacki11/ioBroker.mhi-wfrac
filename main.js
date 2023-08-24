@@ -600,7 +600,7 @@ class mhi_aircon extends utils.Adapter {
             data["contents"] = contents;
         }
 
-        const ret = {error:"", response:"", body:""};
+        const ret = {error:"", response:{}, body:""};
         try {
             this.log.debug("_post | url:" + url + "::data: " + cmd + "::" + JSON.stringify(data));
             const response = await axios.post(url, data, {
@@ -674,26 +674,24 @@ class mhi_aircon extends utils.Adapter {
     }
 
     async getDataFromMitsu() {
-        let ret = {error:""};
         const contents = {
             [KEY_AIRCON_ID]: this.AirconId
         };
-        try {
-            ret = await this._post(COMMAND_GET_AIRCON_STAT, contents);
-            if (ret.error === "") {
-                this.acCoder.fromBase64(this.AirconStat, ret.response.contents.airconStat);
-                this.firmwareVersion_wireless = ret.response.contents.wireless.firmVer;
-                this.firmwareVersion_mcu = ret.response.contents.mcu.firmVer;
-                this.firmwareType = ret.response.contents.firmType;
-                this.connected_accounts = ret.response.contents.numOfAccount;
-                this.ledStat = ret.response.contents.ledStat;
-                this.autoHeating = ret.response.contents.autoHeating;
-            }
-        } catch (error) {
-            this.log.error(`Could not get Data: ${error}`);
-            ret.error = error;
-        }
-        return ret;
+        await this._post(COMMAND_GET_AIRCON_STAT, contents)
+            .then((ret) => {
+                if (ret.error === "") {
+                    this.acCoder.fromBase64(this.AirconStat, ret.response.contents.airconStat);
+                    this.firmwareVersion_wireless = ret.response.contents.wireless.firmVer;
+                    this.firmwareVersion_mcu = ret.response.contents.mcu.firmVer;
+                    this.firmwareType = ret.response.contents.firmType;
+                    this.connected_accounts = ret.response.contents.numOfAccount;
+                    this.ledStat = ret.response.contents.ledStat;
+                    this.autoHeating = ret.response.contents.autoHeating;
+                }
+            })
+            .catch(function (error) {
+                this.log.error(`Could not get Data: ${error}`);
+            });
     }
 
     async sendDataToMitsu() {

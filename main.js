@@ -17,7 +17,6 @@ const TIMEZONE = "Europe/Berlin";
 const AIRCON_PORT = 51443;
 const AIRCON_DEVICEID = "18547566-315b-4941-bb9b-90cedef4bbb7";
 
-const COMMAND_DELETE_ACCOUNT_INFO = "deleteAccountInfo";
 const COMMAND_GET_DEVICE_INFO = "getDeviceInfo";
 const COMMAND_SET_AIRCON_STAT = "setAirconStat";
 const COMMAND_UPDATE_ACCOUNT_INFO = "updateAccountInfo";
@@ -46,7 +45,6 @@ class mhi_aircon extends utils.Adapter {
         this.AirconId = "";
         this.AirconMac = "";
         this.AirconApMode = 0;
-        this.lastAirconData = null;
         this.firmwareVersion_wireless = "";
         this.firmwareVersion_mcu = "";
         this.firmwareType = "";
@@ -621,22 +619,6 @@ class mhi_aircon extends utils.Adapter {
         return ret;
     }
 
-    async getDeviceInfoFromMitsu() {
-        let ret = {error:""};
-
-        try {
-            ret = await this._post(COMMAND_GET_DEVICE_INFO);
-
-            if (ret.error === "") {
-                ret = ret.response.contents;
-            }
-        } catch (error) {
-            this.log.error(`Could not get Data: ${error}`);
-            ret.error = error;
-        }
-        return ret;
-    }
-
     async update_account_info() {
         //Update the account info on the airco (sets to operator id of the device)
         const contents = {
@@ -648,29 +630,18 @@ class mhi_aircon extends utils.Adapter {
         return await this._post(COMMAND_UPDATE_ACCOUNT_INFO, contents);
     }
 
-
-    async delete_account_info() {
-        //Update the account info on the airco (deletes to operator id from the device)
-        const contents = {
-            "accountId": OPERATORID,
-            [KEY_AIRCON_ID]: this.AirconId
-        };
-        return await this._post(COMMAND_DELETE_ACCOUNT_INFO, contents);
-    }
-
     async register_airco() {
-        try {
-            this.lastAirconData = await this.getDeviceInfoFromMitsu();
-            this.AirconId = this.lastAirconData.airconId;
-            this.AirconApMode = this.lastAirconData.apMode;
-            this.AirconMac = this.lastAirconData.macAddress;
+        await this._post(COMMAND_GET_DEVICE_INFO)
+            .then((ret) => {
+                if (ret.error === "") {
+                    this.AirconId = ret.response.airconId;
+                    this.AirconApMode = ret.response.apMode;
+                    this.AirconMac = ret.response.macAddress;
 
-            //this.delete_account_info();
-            await this.update_account_info();
-
-        } catch (e) {
-            this.log.error(e);
-        }
+                    this.update_account_info();
+                }
+            })
+            .catch((error) => { this.log.error(error); });
     }
 
     async getDataFromMitsu() {
@@ -689,7 +660,7 @@ class mhi_aircon extends utils.Adapter {
                     this.autoHeating = ret.response.contents.autoHeating;
                 }
             })
-            .catch(function (error) {
+            .catch((error) => {
                 this.log.error(`Could not get Data: ${error}`);
             });
     }
@@ -706,7 +677,7 @@ class mhi_aircon extends utils.Adapter {
                     this.acCoder.fromBase64(this.AirconStat, ret.response.contents.airconStat);
                 }
             })
-            .catch(function (error) {
+            .catch((error) => {
                 this.log.error(`Could not send Data: ${error}`);
             });
     }

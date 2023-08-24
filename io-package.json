@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "mhi_aircon",
-        "version": "1.0.2",
+        "version": "1.0.3",
         "news": {
             "1.0.2": {
                 "en": "made entrust changeable",

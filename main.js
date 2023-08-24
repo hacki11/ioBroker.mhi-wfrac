@@ -52,7 +52,6 @@ class mhi_aircon extends utils.Adapter {
         this.firmwareType = "";
         this.connected_accounts = 0;
         this.name = "";
-        this.lastResponse = {};
         this.lastError = "";
         this.autoHeating = 0;
         this.ledStat = 0;
@@ -74,7 +73,7 @@ class mhi_aircon extends utils.Adapter {
         this.log.debug("onReady::register_airco");
         await this.register_airco();
 
-        if (this.AirconId!="") {
+        if (this.AirconId != "") {
             this.setState("info.connection", true, true);
         }
 
@@ -90,38 +89,38 @@ class mhi_aircon extends utils.Adapter {
     }
 
     async setStateVal(id, val) {
-        let valchange=0;
+        let valchange = 0;
         let idS = "";
         const h = id.split(".");
         if (h.length == 3) {
             idS = h[2];
         }
         switch (idS) {
-            case "inOperation" :
+            case "inOperation":
                 this.AirconStat.operation = val;
                 valchange++;
                 break;
-            case "OperationMode" :
+            case "OperationMode":
                 this.AirconStat.operationMode = val;
                 valchange++;
                 break;
-            case "Airflow" :
+            case "Airflow":
                 this.AirconStat.airFlow = val;
                 valchange++;
                 break;
-            case "Preset-Temp" :
+            case "Preset-Temp":
                 this.AirconStat.presetTemp = val;
                 valchange++;
                 break;
-            case "Winddirection LR" :
+            case "Winddirection LR":
                 this.AirconStat.windDirectionLR = val;
                 valchange++;
                 break;
-            case "Winddirection UD" :
+            case "Winddirection UD":
                 this.AirconStat.windDirectionUD = val;
                 valchange++;
                 break;
-            case "Entrust" :
+            case "Entrust":
                 this.AirconStat.entrust = val;
                 valchange++;
                 break;
@@ -136,7 +135,7 @@ class mhi_aircon extends utils.Adapter {
         await this.setStateAsync("inOperation", this.AirconStat.operation, true);
         await this.setStateAsync("OperationMode", this.AirconStat.operationMode, true);
         await this.setStateAsync("Airflow", this.AirconStat.airFlow, true);
-        await this.setStateAsync("ModelNo", ""+this.AirconStat.modelNo, true);
+        await this.setStateAsync("ModelNo", "" + this.AirconStat.modelNo, true);
         await this.setStateAsync("Indoor-Temp", this.AirconStat.indoorTemp, true);
         await this.setStateAsync("Outdoor-Temp", this.AirconStat.outdoorTemp, true);
         await this.setStateAsync("Preset-Temp", this.AirconStat.presetTemp, true);
@@ -279,14 +278,14 @@ class mhi_aircon extends utils.Adapter {
                 read: true,
                 write: true,
                 "states": {
-                    0 : "auto",
-                    1 : "left",
-                    2 : "slightly left",
-                    3 : "middle",
-                    4 : "slightly right",
-                    5 : "right",
-                    6 : "wide",
-                    7 : "spot"
+                    0: "auto",
+                    1: "left",
+                    2: "slightly left",
+                    3: "middle",
+                    4: "slightly right",
+                    5: "right",
+                    6: "wide",
+                    7: "spot"
                 }
             },
             native: {},
@@ -302,11 +301,11 @@ class mhi_aircon extends utils.Adapter {
                 read: true,
                 write: true,
                 "states": {
-                    0 : "auto",
-                    1 : "higher",
-                    2 : "slightly higher",
-                    3 : "slightly lower",
-                    4 : "lower"
+                    0: "auto",
+                    1: "higher",
+                    2: "slightly higher",
+                    3: "slightly lower",
+                    4: "lower"
                 }
             },
             native: {},
@@ -539,7 +538,7 @@ class mhi_aircon extends utils.Adapter {
     }
 
     startTimer() {
-        this.timer = setTimeout(() =>this.startTimerAction(), (this.config.timer * 60000));
+        this.timer = setTimeout(() => this.startTimerAction(), (this.config.timer * 60000));
     }
 
     async startTimerAction() {
@@ -548,7 +547,7 @@ class mhi_aircon extends utils.Adapter {
     }
 
     async getDataFromAircon() {
-        if (this.AirconId!="") {
+        if (this.AirconId != "") {
             await this.getDataFromMitsu();
             await this.setIOBStates();
         }
@@ -572,23 +571,6 @@ class mhi_aircon extends utils.Adapter {
         }
     }
 
-    // If you need to react to object changes, uncomment the following block and the corresponding line in the constructor.
-    // You also need to subscribe to the objects with `this.subscribeObjects`, similar to `this.subscribeStates`.
-    // /**
-    //  * Is called if a subscribed object changes
-    //  * @param {string} id
-    //  * @param {ioBroker.Object | null | undefined} obj
-    //  */
-    // onObjectChange(id, obj) {
-    //     if (obj) {
-    //         // The object was changed
-    //         this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
-    //     } else {
-    //         // The object was deleted
-    //         this.log.info(`object ${id} deleted`);
-    //     }
-    // }
-
     /**
      * Is called if a subscribed state changes
      * @param {string} id
@@ -609,57 +591,49 @@ class mhi_aircon extends utils.Adapter {
 
     async _post(cmd, contents) {
         await delay(2050);
-        const url = "http://"+this.config.ip+":"+AIRCON_PORT;
-        const millis = Date.now();
-        const t = Math.floor(millis / 1000);
+        const url = "http://" + this.config.ip + ":" + AIRCON_PORT;
 
         const data = {
             "apiVer": "1.0",
             "command": cmd,
             "deviceId": AIRCON_DEVICEID,
             "operatorId": OPERATORID,
-            "timestamp": t,
+            "timestamp": Math.floor(Date.now() / 1000),
         };
         if (contents != "") {
             data["contents"] = contents;
         }
 
-        const ret = {};
-        ret.error="";
-        ret.response="";
-        ret.body="";
+        const ret = {error:"", response:"", body:""};
         try {
-            this.log.info("_post | url:"+url+"::data: "+cmd+"::"+JSON.stringify(data));
+            this.log.debug("_post | url:" + url + "::data: " + cmd + "::" + JSON.stringify(data));
             const response = await axios.post(url, data, {
+                timeout: 5000, // Set a timeout of 5 seconds
                 headers: {
                     "Connection": "close",
                     "Content-Type": "application/json;charset=UTF-8",
                     "Access-Control-Allow-Origin": "*",
                     "accept": "application/json",
-                }});
+                }
+            });
             ret.response = response.data;
-            this.lastResponse = ret.response;
-            this.log.info("_post | return: "+cmd+"::"+JSON.stringify(ret.response));
-            this.log.info("_post | RESULT:"+JSON.stringify(response.data));
+            this.log.debug("_post | return: " + cmd + "::" + JSON.stringify(ret.response));
         } catch (error) {
             ret.error = error;
-            this.log.error(`_post | Could not get Data: ${error}`);
-            /*if (error.response) {
-                this.log.error(error.response.data);
-                this.log.error(error.response.status);
-                this.log.error(error.response.headers);
-            }*/
+            this.log.debug(`_post | Could not get Data: ${error}`);
         }
         return ret;
     }
 
     async getDeviceInfoFromMitsu() {
-        let ret = {};
-        ret.error = "-1";
+        let ret = {error:""};
 
         try {
             ret = await this._post(COMMAND_GET_DEVICE_INFO);
-            ret = ret.response.contents;
+
+            if (ret.error === "") {
+                ret = ret.response.contents;
+            }
         } catch (error) {
             this.log.error(`Could not get Data: ${error}`);
             ret.error = error;
@@ -698,37 +672,36 @@ class mhi_aircon extends utils.Adapter {
             //this.delete_account_info();
             await this.update_account_info();
 
-        } catch(e) {
+        } catch (e) {
             this.log.error(e);
         }
     }
 
     async getDataFromMitsu() {
-        let ret = {};
-        ret.error="-1";
+        let ret = {error:""};
         const contents = {
             [KEY_AIRCON_ID]: this.AirconId
         };
         try {
             ret = await this._post(COMMAND_GET_AIRCON_STAT, contents);
-            this.acCoder.fromBase64(this.AirconStat, ret.response.contents.airconStat);
-            this.firmwareVersion_wireless = ret.response.contents.wireless.firmVer;
-            this.firmwareVersion_mcu = ret.response.contents.mcu.firmVer;
-            this.firmwareType = ret.response.contents.firmType;
-            this.connected_accounts = ret.response.contents.numOfAccount;
-            this.ledStat = ret.response.contents.ledStat;
-            this.autoHeating = ret.response.contents.autoHeating;
-
+            if (ret.error === "") {
+                this.acCoder.fromBase64(this.AirconStat, ret.response.contents.airconStat);
+                this.firmwareVersion_wireless = ret.response.contents.wireless.firmVer;
+                this.firmwareVersion_mcu = ret.response.contents.mcu.firmVer;
+                this.firmwareType = ret.response.contents.firmType;
+                this.connected_accounts = ret.response.contents.numOfAccount;
+                this.ledStat = ret.response.contents.ledStat;
+                this.autoHeating = ret.response.contents.autoHeating;
+            }
         } catch (error) {
             this.log.error(`Could not get Data: ${error}`);
-            ret.error=error;
+            ret.error = error;
         }
         return ret;
     }
 
     async sendDataToMitsu() {
-        let ret = {};
-        ret.error="-1";
+        let ret = {error:""};
         const command = this.acCoder.toBase64(this.AirconStat);
         const contents = {
             [KEY_AIRCON_ID]: this.AirconId,
@@ -736,10 +709,12 @@ class mhi_aircon extends utils.Adapter {
         };
         try {
             ret = await this._post(COMMAND_SET_AIRCON_STAT, contents);
-            this.acCoder.fromBase64(this.AirconStat, ret.response.contents.airconStat);
+            if (ret.error === "") {
+                this.acCoder.fromBase64(this.AirconStat, ret.response.contents.airconStat);
+            }
         } catch (error) {
-            this.log.error(`Could not get Data: ${error}`);
-            ret.error=error;
+            this.log.error(`Could not send Data: ${error}`);
+            ret.error = error;
         }
         return ret;
     }

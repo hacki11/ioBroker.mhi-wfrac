@@ -1,12 +1,22 @@
 {
-    "expert": "yes",
-    "cli": false,
-    "adapterName": "mhi_aircon",
-    "title": "Mitsubishi Aircon with RAC-WiFi-Modules",
-    "description": "Mitsubishi Aircon Adapter for RAC-WiFi-Modules",
+    "cli": true,
+    "target": "directory",
+    "adapterName": "mhi-wfrac",
+    "title": "Mitsubishi Heavy WF-RAC",
+    "description": "Mitsubishi Heavy Industries Air Conditioners with WLAN Adapter WF-RAC",
     "keywords": [
-        "Mitsubishi Aircon"
+        "Mitsubishi",
+        "Aircon",
+        "WF-RAC",
+        "MHI",
+        "AC",
+        "Airconditioner"
     ],
+    "contributors": [
+        "wolkeSoftware",
+        "W0w3"
+    ],
+    "expert": "no",
     "features": [
         "adapter"
     ],
@@ -31,22 +41,26 @@
         }
     ],
     "language": "JavaScript",
-    "nodeVersion": "14",
+    "nodeVersion": "20",
     "adminUi": "json",
-    "releaseScript": "yes",
-    "indentation": "Space (4)",
-    "quotes": "double",
-    "es6class": "yes",
     "tools": [
         "ESLint",
-        "type checking"
+        "type checking",
+        "devcontainer"
     ],
-    "authorName": "wolkeSoftware",
-    "authorGithub": "wolkeSoftware",
-    "authorEmail": "wolkesoftware@gmail.com",
+    "releaseScript": "yes",
+    "devServer": "yes",
+    "devServerPort": 8081,
+    "indentation": "Space (4)",
+    "quotes": "double",
+    "authorName": "hacki11",
+    "authorGithub": "hacki11",
+    "authorEmail": "hacko@mailbox.org",
     "gitRemoteProtocol": "HTTPS",
+    "gitCommit": "no",
+    "defaultBranch": "main",
     "license": "MIT License",
-    "dependabot": "no",
-    "target": "github",
-    "creatorVersion": "2.3.0"
+    "dependabot": "yes",
+    "creatorVersion": "2.6.5",
+    "replay": "/home/hacki/git/ioBroker.mhi-wfrac/.create-adapter.json"
 }

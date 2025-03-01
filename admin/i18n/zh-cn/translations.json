@@ -1,5 +1,5 @@
 {
-    "mhi_aircon adapter settings": "mhi_aircon的适配器设置",
-    "ip": "IP-Address of the Aircon",
-    "timer": "Time in min to retrieve data from the aircon"
+    "mhi-wfrac adapter settings": "mhi-wfrac的适配器设置",
+    "ip": "空调的IP地址",
+    "timer": "最小的时间从空调中检索数据"
 }

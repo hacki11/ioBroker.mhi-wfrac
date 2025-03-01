@@ -1,5 +1,5 @@
 {
-    "mhi_aircon adapter settings": "Ajustes del adaptador para mhi_aircon",
-    "ip": "IP-Address of the Aircon",
-    "timer": "Time in min to retrieve data from the aircon"
+    "mhi-wfrac adapter settings": "Ajustes del adaptador para mhi-wfrac",
+    "ip": "Dirección IP del aire acondicionado",
+    "timer": "Tiempo en min para recuperar datos del aire acondicionado"
 }

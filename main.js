@@ -1,7 +1,7 @@
 "use strict";
 
 /*
- * Created with @iobroker/create-adapter v2.3.0
+ * Created with @iobroker/create-adapter v2.6.5
  */
 
 const utils = require("@iobroker/adapter-core");
@@ -27,7 +27,7 @@ const delay = (delayInms) => {
     return new Promise(resolve => setTimeout(resolve, delayInms));
 };
 
-class mhi_aircon extends utils.Adapter {
+class MhiWfrac extends utils.Adapter {
 
     /**
      * @param {Partial<utils.AdapterOptions>} [options={}]
@@ -35,7 +35,7 @@ class mhi_aircon extends utils.Adapter {
     constructor(options) {
         super({
             ...options,
-            name: "mhi_aircon",
+            name: "mhi-wfrac",
         });
         this.on("ready", this.onReady.bind(this));
         this.on("stateChange", this.onStateChange.bind(this));
@@ -172,6 +172,7 @@ class mhi_aircon extends utils.Adapter {
             },
             native: {},
         });
+
         // In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
         this.subscribeStates("inOperation");
 
@@ -699,8 +700,8 @@ if (require.main !== module) {
     /**
      * @param {Partial<utils.AdapterOptions>} [options={}]
      */
-    module.exports = (options) => new mhi_aircon(options);
+    module.exports = (options) => new MhiWfrac(options);
 } else {
     // otherwise start the instance directly
-    new mhi_aircon();
+    new MhiWfrac();
 }

@@ -65,18 +65,18 @@ class MhiWfrac extends utils.Adapter {
         // Reset the connection indicator during startup
         this.setState("info.connection", false, true);
 
-        this.log.debug("onReady::initIOBStates");
-        await this.initIOBStates();
         this.log.debug("onReady::register_airco");
         await this.register_airco();
 
         if (this.AirconId != "") {
             this.setState("info.connection", true, true);
 
+            this.log.debug("onReady::initIOBStates");
+            await this.initIOBStates(this.AirconId);
             this.log.debug("onReady::getDataFromMitsu");
             await this.getDataFromMitsu();
             this.log.debug("onReady::setIOBStates");
-            await this.setIOBStates();
+            await this.setIOBStates(this.AirconId);
 
             //get data from aircon and start timer
             if (this.config.timer > 0) {
@@ -89,35 +89,35 @@ class MhiWfrac extends utils.Adapter {
         let valchange = 0;
         let idS = "";
         const h = id.split(".");
-        if (h.length == 3) {
-            idS = h[2];
+        if (h.length == 4) {
+            idS = h[3];
         }
         switch (idS) {
-            case "inOperation":
+            case "power":
                 this.AirconStat.operation = val;
                 valchange++;
                 break;
-            case "OperationMode":
+            case "mode":
                 this.AirconStat.operationMode = val;
                 valchange++;
                 break;
-            case "Airflow":
+            case "fanSpeed":
                 this.AirconStat.airFlow = val;
                 valchange++;
                 break;
-            case "Preset-Temp":
+            case "targetTemperature":
                 this.AirconStat.presetTemp = val;
                 valchange++;
                 break;
-            case "Winddirection LR":
+            case "swingLeftRight":
                 this.AirconStat.windDirectionLR = val;
                 valchange++;
                 break;
-            case "Winddirection UD":
+            case "swingUpDown":
                 this.AirconStat.windDirectionUD = val;
                 valchange++;
                 break;
-            case "Entrust":
+            case "3dAuto":
                 this.AirconStat.entrust = val;
                 valchange++;
                 break;
@@ -128,45 +128,45 @@ class MhiWfrac extends utils.Adapter {
         }
     }
 
-    async setIOBStates() {
+    async setIOBStates(airconId) {
         try{
-            await this.setStateAsync("inOperation", this.AirconStat.operation, true);
-            await this.setStateAsync("OperationMode", this.AirconStat.operationMode, true);
-            await this.setStateAsync("Airflow", this.AirconStat.airFlow, true);
-            await this.setStateAsync("ModelNo", "" + this.AirconStat.modelNo, true);
-            await this.setStateAsync("Indoor-Temp", this.AirconStat.indoorTemp, true);
-            await this.setStateAsync("Outdoor-Temp", this.AirconStat.outdoorTemp, true);
-            await this.setStateAsync("Preset-Temp", this.AirconStat.presetTemp, true);
-            await this.setStateAsync("Winddirection LR", this.AirconStat.windDirectionLR, true);
-            await this.setStateAsync("Winddirection UD", this.AirconStat.windDirectionUD, true);
-            await this.setStateAsync("Cool-Hot-Judge", this.AirconStat.coolHotJudge, true);
-            await this.setStateAsync("Electric", this.AirconStat.electric, true);
-            await this.setStateAsync("Entrust", this.AirconStat.entrust, true);
-            await this.setStateAsync("Error-Code", this.AirconStat.errorCode, true);
-            await this.setStateAsync("Self-Clean-Operation", this.AirconStat.isSelfCleanOperation, true);
-            await this.setStateAsync("Self-Clean-Reset", this.AirconStat.isSelfCleanReset, true);
-            await this.setStateAsync("Vacant", this.AirconStat.isVacantProperty, true);
-            await this.setStateAsync("AP-Mode", this.AirconApMode, true);
-            await this.setStateAsync("Aircon-ID", this.AirconId, true);
-            await this.setStateAsync("Aircon-MAC-Address", this.AirconMac, true);
-            await this.setStateAsync("LED-Stat", this.ledStat, true);
-            await this.setStateAsync("Firmware-Type", this.firmwareType, true);
-            await this.setStateAsync("Wireless-Firmware-Version", this.firmwareVersion_wireless, true);
-            await this.setStateAsync("MCU-Firmware-Version", this.firmwareVersion_mcu, true);
-            await this.setStateAsync("Accounts", this.connected_accounts, true);
-            await this.setStateAsync("Auto-Heating", this.autoHeating, true);
+            await this.setState(`${airconId}.power`, this.AirconStat.operation, true);
+            await this.setState(`${airconId}.mode`, this.AirconStat.operationMode, true);
+            await this.setState(`${airconId}.fanSpeed`, this.AirconStat.airFlow, true);
+            await this.setState(`${airconId}.model`, "" + this.AirconStat.modelNo, true);
+            await this.setState(`${airconId}.indoorTemperatur`, this.AirconStat.indoorTemp, true);
+            await this.setState(`${airconId}.outdoorTemperature`, this.AirconStat.outdoorTemp, true);
+            await this.setState(`${airconId}.targetTemperature`, this.AirconStat.presetTemp, true);
+            await this.setState(`${airconId}.swingLeftRight`, this.AirconStat.windDirectionLR, true);
+            await this.setState(`${airconId}.swingUpDown`, this.AirconStat.windDirectionUD, true);
+            await this.setState(`${airconId}.coolHotJudge`, this.AirconStat.coolHotJudge, true);
+            await this.setState(`${airconId}.electric`, this.AirconStat.electric, true);
+            await this.setState(`${airconId}.3dAuto`, this.AirconStat.entrust, true);
+            await this.setState(`${airconId}.errorCode`, this.AirconStat.errorCode, true);
+            await this.setState(`${airconId}.selfCleanOperation`, this.AirconStat.isSelfCleanOperation, true);
+            await this.setState(`${airconId}.selfCleanReset`, this.AirconStat.isSelfCleanReset, true);
+            await this.setState(`${airconId}.vcacant`, this.AirconStat.isVacantProperty, true);
+            await this.setState(`${airconId}.apMode`, this.AirconApMode, true);
+            await this.setState(`${airconId}.airconId`, this.AirconId, true);
+            await this.setState(`${airconId}.macAddress`, this.AirconMac, true);
+            await this.setState(`${airconId}.ledStatus`, this.ledStat, true);
+            await this.setState(`${airconId}.firmwareType`, this.firmwareType, true);
+            await this.setState(`${airconId}.wirelessFirmwareVersion`, this.firmwareVersion_wireless, true);
+            await this.setState(`${airconId}.mcuFirmwareVersion`, this.firmwareVersion_mcu, true);
+            await this.setState(`${airconId}.accounts`, this.connected_accounts, true);
+            await this.setState(`${airconId}.autoHeating`, this.autoHeating, true);
         } catch(e){
             this.log.error(JSON.stringify(this.AirconStat));
         }
     }
 
-    async initIOBStates() {
-        await this.setObjectNotExistsAsync("inOperation", {
+    async initIOBStates(airconId) {
+        await this.setObjectNotExistsAsync(`${airconId}.power`, {
             type: "state",
             common: {
-                name: "inOperation",
+                name: "Power",
                 type: "boolean",
-                role: "indicator",
+                role: "switch.power",
                 read: true,
                 write: true,
             },
@@ -174,16 +174,18 @@ class MhiWfrac extends utils.Adapter {
         });
 
         // In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
-        this.subscribeStates("inOperation");
+        this.subscribeStates(`${airconId}.power`);
 
-        await this.setObjectNotExistsAsync("OperationMode", {
+        await this.setObjectNotExistsAsync(`${airconId}.mode`, {
             type: "state",
             common: {
-                name: "OperationMode",
+                name: "Operation Mode",
                 type: "number",
-                role: "indicator",
+                role: "level.mode.airconditioner",
                 read: true,
                 write: true,
+                min: 0,
+                max: 4,
                 "states": {
                     0: "Auto",
                     1: "Cool",
@@ -194,73 +196,75 @@ class MhiWfrac extends utils.Adapter {
             },
             native: {},
         });
-        this.subscribeStates("OperationMode");
+        this.subscribeStates(`${airconId}.mode`);
 
-        await this.setObjectNotExistsAsync("Airflow", {
+        await this.setObjectNotExistsAsync(`${airconId}.fanSpeed`, {
             type: "state",
             common: {
-                name: "Airflow",
+                name: "Fan Speed",
                 type: "number",
-                role: "indicator",
+                role: "level.mode.fan",
                 read: true,
                 write: true,
+                min: 0,
+                max: 4,
                 states: {
                     0: "auto",
-                    1: "min Airflow",
-                    2: "medium Airflow",
-                    3: "high Airflow",
-                    4: "max Airflow"
+                    1: "min",
+                    2: "medium",
+                    3: "high",
+                    4: "max"
                 }
             },
             native: {},
         });
-        this.subscribeStates("Airflow");
+        this.subscribeStates(`${airconId}.fanSpeed`);
 
-        await this.setObjectNotExistsAsync("ModelNo", {
+        await this.setObjectNotExistsAsync(`${airconId}.model`, {
             type: "state",
             common: {
-                name: "ModelNo",
+                name: "Model Number",
                 type: "string",
-                role: "indicator",
+                role: "info",
                 read: true,
                 write: false,
             },
             native: {},
         });
-        this.subscribeStates("ModelNo");
+        this.subscribeStates(`${airconId}.model`);
 
-        await this.setObjectNotExistsAsync("Indoor-Temp", {
+        await this.setObjectNotExistsAsync(`${airconId}.indoorTemperature`, {
             type: "state",
             common: {
-                name: "Indoor-Temp",
+                name: "Indoor Temperature",
                 type: "number",
-                role: "indicator",
+                role: "value.temperature",
                 read: true,
                 write: false,
             },
             native: {},
         });
-        //this.subscribeStates("Indoor-Temp");
+        //this.subscribeStates("indoorTemperature");
 
-        await this.setObjectNotExistsAsync("Outdoor-Temp", {
+        await this.setObjectNotExistsAsync(`${airconId}.outdoorTemperature`, {
             type: "state",
             common: {
-                name: "Outdoor-Temp",
+                name: "Outdoor Temperature",
                 type: "number",
-                role: "indicator",
+                role: "value.temperature",
                 read: true,
                 write: false,
             },
             native: {},
         });
-        //this.subscribeStates("Outdoor-Temp");
+        //this.subscribeStates("outdoorTemperature");
 
-        await this.setObjectNotExistsAsync("Preset-Temp", {
+        await this.setObjectNotExistsAsync(`${airconId}.targetTemperature`, {
             type: "state",
             common: {
-                name: "Preset-Temp",
+                name: "Target Temperature",
                 type: "number",
-                role: "indicator",
+                role: "level.temperature",
                 read: true,
                 write: true,
                 min: 18,
@@ -269,16 +273,18 @@ class MhiWfrac extends utils.Adapter {
             },
             native: {},
         });
-        this.subscribeStates("Preset-Temp");
+        this.subscribeStates(`${airconId}.targetTemperature`);
 
-        await this.setObjectNotExistsAsync("Winddirection LR", {
+        await this.setObjectNotExistsAsync(`${airconId}.swingLeftRight`, {
             type: "state",
             common: {
-                name: "Winddirection LR",
+                name: "Swing Left/Right",
                 type: "number",
-                role: "indicator",
+                role: "level.mode.swing",
                 read: true,
                 write: true,
+                min: 0,
+                max: 7,
                 "states": {
                     0: "auto",
                     1: "left",
@@ -292,16 +298,18 @@ class MhiWfrac extends utils.Adapter {
             },
             native: {},
         });
-        this.subscribeStates("Winddirection LR");
+        this.subscribeStates(`${airconId}.swingLeftRight`);
 
-        await this.setObjectNotExistsAsync("Winddirection UD", {
+        await this.setObjectNotExistsAsync(`${airconId}.swingUpDown`, {
             type: "state",
             common: {
-                name: "Winddirection UD",
+                name: "Swing Up/Down",
                 type: "number",
-                role: "indicator",
+                role: "level.mode.swing",
                 read: true,
                 write: true,
+                min: 0,
+                max: 4,
                 "states": {
                     0: "auto",
                     1: "higher",
@@ -312,27 +320,27 @@ class MhiWfrac extends utils.Adapter {
             },
             native: {},
         });
-        this.subscribeStates("Winddirection UD");
+        this.subscribeStates(`${airconId}.swingVertical`);
 
         /*
-        await this.setObjectNotExistsAsync("Auto-Heating", {
+        await this.setObjectNotExistsAsync("autoHeating", {
             type: "state",
             common: {
-                name: "Auto-Heating",
+                name: "Auto Heating",
                 type: "number",
-                role: "indicator",
+                role: "switch.mode.auto",
                 read: true,
                 write: false,
             },
             native: {},
         });
-        //this.subscribeStates("Auto-Heating");
+        //this.subscribeStates("autoHeating");
         */
 
-        await this.setObjectNotExistsAsync("Cool-Hot-Judge", {
+        await this.setObjectNotExistsAsync(`${airconId}.coolHotJudge`, {
             type: "state",
             common: {
-                name: "Cool-Hot-Judge",
+                name: "Cool Hot Judge",
                 type: "boolean",
                 role: "indicator",
                 read: true,
@@ -340,51 +348,51 @@ class MhiWfrac extends utils.Adapter {
             },
             native: {},
         });
-        //this.subscribeStates("Cool-Hot-Judge");
+        //this.subscribeStates("coolHotJudge");
 
-        await this.setObjectNotExistsAsync("Electric", {
+        await this.setObjectNotExistsAsync(`${airconId}.electric`, {
             type: "state",
             common: {
-                name: "Electric",
+                name: "electric",
                 type: "number",
-                role: "indicator",
+                role: "value.energy",
                 read: true,
                 write: false,
             },
             native: {},
         });
-        //this.subscribeStates("Electric");
+        //this.subscribeStates("electric");
 
-        await this.setObjectNotExistsAsync("Entrust", {
+        await this.setObjectNotExistsAsync(`${airconId}.3dAuto`, {
             type: "state",
             common: {
-                name: "Entrust",
+                name: "3D Auto",
                 type: "boolean",
-                role: "indicator",
+                role: "switch.mode.auto",
                 read: true,
                 write: true,
             },
             native: {},
         });
-        this.subscribeStates("Entrust");
+        this.subscribeStates(`${airconId}.3dAuto`);
 
-        await this.setObjectNotExistsAsync("Error-Code", {
+        await this.setObjectNotExistsAsync(`${airconId}.errorCode`, {
             type: "state",
             common: {
-                name: "Error-Code",
+                name: "Error Code",
                 type: "string",
-                role: "indicator",
+                role: "value.warning",
                 read: true,
                 write: false,
             },
             native: {},
         });
-        //this.subscribeStates("Error-Code");
+        //this.subscribeStates("errorCode");
 
-        await this.setObjectNotExistsAsync("Self-Clean-Operation", {
+        await this.setObjectNotExistsAsync(`${airconId}.selfCleanoOperation`, {
             type: "state",
             common: {
-                name: "Self-Clean-Operation",
+                name: "Self Clean Operation",
                 type: "boolean",
                 role: "indicator",
                 read: true,
@@ -394,10 +402,10 @@ class MhiWfrac extends utils.Adapter {
         });
         //this.subscribeStates("Self-Clean-Operation");
 
-        await this.setObjectNotExistsAsync("Self-Clean-Reset", {
+        await this.setObjectNotExistsAsync(`${airconId}.selfCleanReset`, {
             type: "state",
             common: {
-                name: "Self-Clean-Reset",
+                name: "Self Clean Reset",
                 type: "boolean",
                 role: "indicator",
                 read: true,
@@ -407,7 +415,7 @@ class MhiWfrac extends utils.Adapter {
         });
         //this.subscribeStates("Self-Clean-Reset");
 
-        await this.setObjectNotExistsAsync("Vacant", {
+        await this.setObjectNotExistsAsync(`${airconId}.vcacant`, {
             type: "state",
             common: {
                 name: "Vacant",
@@ -420,10 +428,10 @@ class MhiWfrac extends utils.Adapter {
         });
         //this.subscribeStates("Vacant");
 
-        await this.setObjectNotExistsAsync("AP-Mode", {
+        await this.setObjectNotExistsAsync(`${airconId}.apMode`, {
             type: "state",
             common: {
-                name: "AP-Mode",
+                name: "AP Mode",
                 type: "number",
                 role: "indicator",
                 read: true,
@@ -433,12 +441,12 @@ class MhiWfrac extends utils.Adapter {
         });
         //this.subscribeStates("AP-Mode");
 
-        await this.setObjectNotExistsAsync("Aircon-ID", {
+        await this.setObjectNotExistsAsync(`${airconId}.airconId`, {
             type: "state",
             common: {
-                name: "Aircon-ID",
+                name: "Airconditioner ID",
                 type: "string",
-                role: "indicator",
+                role: "info",
                 read: true,
                 write: false,
             },
@@ -446,33 +454,33 @@ class MhiWfrac extends utils.Adapter {
         });
         //this.subscribeStates("Aircon-ID");
 
-        await this.setObjectNotExistsAsync("Aircon-MAC-Address", {
+        await this.setObjectNotExistsAsync(`${airconId}.macAddress`, {
             type: "state",
             common: {
-                name: "Aircon-MAC-Address",
+                name: "MAC Address",
                 type: "string",
-                role: "indicator",
+                role: "info.mac",
                 read: true,
                 write: false,
             },
             native: {},
         });
-        //this.subscribeStates("Aircon-MAC-Address");
+        //this.subscribeStates("macAddress");
 
-        await this.setObjectNotExistsAsync("LED-Stat", {
+        await this.setObjectNotExistsAsync(`${airconId}.ledStatus`, {
             type: "state",
             common: {
-                name: "LED-Stat",
+                name: "LED Status",
                 type: "number",
-                role: "indicator",
+                role: "info.status",
                 read: true,
                 write: false,
             },
             native: {},
         });
-        //this.subscribeStates("LED-Stat");
+        //this.subscribeStates("ledStat");
 
-        await this.setObjectNotExistsAsync("Firmware-Type", {
+        await this.setObjectNotExistsAsync(`${airconId}.firmwareType`, {
             type: "state",
             common: {
                 name: "Firmware-Type",
@@ -485,33 +493,33 @@ class MhiWfrac extends utils.Adapter {
         });
         //this.subscribeStates("Firmware-Type");
 
-        await this.setObjectNotExistsAsync("Wireless-Firmware-Version", {
+        await this.setObjectNotExistsAsync(`${airconId}.wirelessFirmwareVersion`, {
             type: "state",
             common: {
-                name: "Wireless-Firmware-Version",
+                name: "Wireless Firmware Version",
                 type: "string",
-                role: "indicator",
+                role: "info.firmware",
                 read: true,
                 write: false,
             },
             native: {},
         });
-        //this.subscribeStates("Wireless-Firmware-Version");
+        //this.subscribeStates("wirelessFirmwareVersion");
 
-        await this.setObjectNotExistsAsync("MCU-Firmware-Version", {
+        await this.setObjectNotExistsAsync(`${airconId}.mcuFirmwareVersion`, {
             type: "state",
             common: {
-                name: "MCU-Firmware-Version",
+                name: "MCU Firmware Version",
                 type: "string",
-                role: "indicator",
+                role: "info.firmware",
                 read: true,
                 write: false,
             },
             native: {},
         });
-        //this.subscribeStates("MCU-Firmware-Version");
+        //this.subscribeStates("mcuFirmwareVersion");
 
-        await this.setObjectNotExistsAsync("Accounts", {
+        await this.setObjectNotExistsAsync(`${airconId}.accounts`, {
             type: "state",
             common: {
                 name: "Accounts",
@@ -524,19 +532,18 @@ class MhiWfrac extends utils.Adapter {
         });
         //this.subscribeStates("Accounts");
 
-        await this.setObjectNotExistsAsync("Auto-Heating", {
+        await this.setObjectNotExistsAsync(`${airconId}.autoHeating`, {
             type: "state",
             common: {
-                name: "Auto-Heating",
+                name: "Auto Heating",
                 type: "number",
-                role: "indicator",
+                role: "value",
                 read: true,
                 write: false,
             },
             native: {},
         });
         //this.subscribeStates("Auto-Heating");
-
     }
 
     async getDataFromAircon() {

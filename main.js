@@ -27,7 +27,7 @@ const delay = (delayInms) => {
     return new Promise(resolve => setTimeout(resolve, delayInms));
 };
 
-class MhiWfrac extends utils.Adapter {
+class MHIWFRac extends utils.Adapter {
 
     /**
      * @param {Partial<utils.AdapterOptions>} [options={}]
@@ -134,7 +134,7 @@ class MhiWfrac extends utils.Adapter {
             await this.setState(`${airconId}.mode`, this.AirconStat.operationMode, true);
             await this.setState(`${airconId}.fanSpeed`, this.AirconStat.airFlow, true);
             await this.setState(`${airconId}.model`, "" + this.AirconStat.modelNo, true);
-            await this.setState(`${airconId}.indoorTemperatur`, this.AirconStat.indoorTemp, true);
+            await this.setState(`${airconId}.indoorTemperature`, this.AirconStat.indoorTemp, true);
             await this.setState(`${airconId}.outdoorTemperature`, this.AirconStat.outdoorTemp, true);
             await this.setState(`${airconId}.targetTemperature`, this.AirconStat.presetTemp, true);
             await this.setState(`${airconId}.swingLeftRight`, this.AirconStat.windDirectionLR, true);
@@ -145,7 +145,7 @@ class MhiWfrac extends utils.Adapter {
             await this.setState(`${airconId}.errorCode`, this.AirconStat.errorCode, true);
             await this.setState(`${airconId}.selfCleanOperation`, this.AirconStat.isSelfCleanOperation, true);
             await this.setState(`${airconId}.selfCleanReset`, this.AirconStat.isSelfCleanReset, true);
-            await this.setState(`${airconId}.vcacant`, this.AirconStat.isVacantProperty, true);
+            await this.setState(`${airconId}.vacant`, this.AirconStat.isVacantProperty, true);
             await this.setState(`${airconId}.apMode`, this.AirconApMode, true);
             await this.setState(`${airconId}.airconId`, this.AirconId, true);
             await this.setState(`${airconId}.macAddress`, this.AirconMac, true);
@@ -389,7 +389,7 @@ class MhiWfrac extends utils.Adapter {
         });
         //this.subscribeStates("errorCode");
 
-        await this.setObjectNotExistsAsync(`${airconId}.selfCleanoOperation`, {
+        await this.setObjectNotExistsAsync(`${airconId}.selfCleanOperation`, {
             type: "state",
             common: {
                 name: "Self Clean Operation",
@@ -415,7 +415,7 @@ class MhiWfrac extends utils.Adapter {
         });
         //this.subscribeStates("Self-Clean-Reset");
 
-        await this.setObjectNotExistsAsync(`${airconId}.vcacant`, {
+        await this.setObjectNotExistsAsync(`${airconId}.vacant`, {
             type: "state",
             common: {
                 name: "Vacant",
@@ -549,7 +549,7 @@ class MhiWfrac extends utils.Adapter {
     async getDataFromAircon() {
         if (this.AirconId != "") {
             await this.getDataFromMitsu();
-            await this.setIOBStates();
+            await this.setIOBStates(this.AirconId);
         }
         setTimeout(() => this.getDataFromAircon(), (this.config.timer * 60000));
     }
@@ -707,8 +707,8 @@ if (require.main !== module) {
     /**
      * @param {Partial<utils.AdapterOptions>} [options={}]
      */
-    module.exports = (options) => new MhiWfrac(options);
+    module.exports = (options) => new MHIWFRac(options);
 } else {
     // otherwise start the instance directly
-    new MhiWfrac();
+    new MHIWFRac();
 }

@@ -1,5 +1,8 @@
 {
     "mhi-wfrac adapter settings": "Impostazioni dell'adattatore per mhi-wfrac",
     "ip": "Indirizzo IP dell'Aircon",
-    "timer": "Tempo in min per recuperare i dati dall'aria condizionata"
+    "interval": "Richiedi intervallo in secondi",
+    "hdrGeneric": "Impostazioni generiche",
+    "airConditioners": "Condizionatori d'aria",
+    "ipTooltip": "Indirizzo IP del condizionatore d'aria"
 }

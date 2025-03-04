@@ -1,5 +1,8 @@
 {
     "mhi-wfrac adapter settings": "mhi-wfrac的适配器设置",
     "ip": "空调的IP地址",
-    "timer": "最小的时间从空调中检索数据"
+    "interval": "秒请求间隔",
+    "hdrGeneric": "通用设置",
+    "airConditioners": "空调",
+    "ipTooltip": "空调的IP地址"
 }

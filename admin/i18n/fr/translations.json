@@ -1,5 +1,8 @@
 {
     "mhi-wfrac adapter settings": "Paramètres d'adaptateur pour mhi-wfrac",
     "ip": "IP-Address de l'Aircon",
-    "timer": "Temps en min pour récupérer les données de l'avion"
+    "interval": "Demander l'intervalle en secondes",
+    "hdrGeneric": "Paramètres génériques",
+    "airConditioners": "Climatiseurs",
+    "ipTooltip": "Adresse IP du climatiseur"
 }

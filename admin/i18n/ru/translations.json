@@ -1,5 +1,8 @@
 {
     "mhi-wfrac adapter settings": "Настройки адаптера для mhi-wfrac",
     "ip": "IP-Address aircon",
-    "timer": "Время в мин, чтобы получить данные из Aircon"
+    "hdrGeneric": "Общие настройки",
+    "airConditioners": "Кондиционеры",
+    "ipTooltip": "IP -адрес кондиционера",
+    "interval": "Интервал запроса за секунды"
 }

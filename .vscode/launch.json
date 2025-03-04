@@ -24,6 +24,13 @@
             "request": "launch",
             "command": "npm run test -- ${fileBasenameNoExtension}",
             "cwd": "${fileDirname}"
+          },
+          {
+            "type": "node-terminal",
+            "name": "Update Adapter",
+            "request": "launch",
+            "command": "NPM_PACK=$(npm pack) && iob url $(pwd)/$NPM_PACK --debug && rm $NPM_PACK",
+            "cwd": "${workspaceFolder}"
           }
     ]
 }

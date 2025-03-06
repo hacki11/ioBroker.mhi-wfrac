@@ -1,9 +1,9 @@
 {
   "common": {
     "name": "mhi-wfrac",
-    "version": "2.0.0-alpha.1",
+    "version": "2.0.0-alpha.2",
     "news": {
-      "2.0.0-alpha.1": {
+      "2.0.0-alpha.2": {
         "en": "Bring Adapter Stable\nSupport multiple devices",
         "de": "Adapter Stable\nUnterstützung mehrerer Geräte",
         "ru": "Принесите адаптер стабильный\nПоддержка нескольких устройств",

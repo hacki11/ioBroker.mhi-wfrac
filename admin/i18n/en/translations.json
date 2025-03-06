@@ -1,5 +1,9 @@
 {
-    "mhi_aircon adapter settings": "Adapter settings for mhi_aircon",
-    "ip": "IP-Address of the Aircon",
-    "timer": "Time in min to retrieve data from the aircon"
+    "mhi-wfrac adapter settings": "Adapter settings for mhi-wfrac",
+    "interval": "Request interval in seconds",
+    "hdrGeneric": "Generic Settings",
+    "ip": "IP Address",
+    "airConditioners": "Air Conditioners",
+    "ipTooltip": "IP address of the air conditioner",
+    "name": "Name"
 }

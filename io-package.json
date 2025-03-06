@@ -1,11 +1,20 @@
 {
     "common": {
-        "name": "mhi_aircon",
-        "version": "1.1.0",
+        "name": "mhi-wfrac",
+        "version": "1.0.2",
         "news": {
             "1.0.2": {
-                "en": "made entrust changeable",
-                "de": "Wert Entrust (3D-Auto) in Adapter veränderlich"
+                "en": "Support 3D-Auto (Entrust)",
+                "de": "Support 3D-Auto (Entrust)",
+                "ru": "Поддержка 3D-Auto (Entrust)",
+                "pt": "Suporte 3D-Auto (Entrust)",
+                "nl": "Ondersteuning 3D-Auto (Vertrouwen)",
+                "fr": "Soutien 3D-Auto (Entrust)",
+                "it": "Supporto 3D-Auto (Entrust)",
+                "es": "Soporte 3D-Auto (Entrust)",
+                "pl": "Wsparcie 3D- Auto (Entrust)",
+                "uk": "Підтримка 3D-Авто (Довіра)",
+                "zh-cn": "支持 3D- Auto( 信任)"
             },
             "0.0.1": {
                 "en": "initial release",
@@ -17,48 +26,61 @@
                 "it": "Versione iniziale",
                 "es": "Versión inicial",
                 "pl": "Pierwsze wydanie",
+                "uk": "Початкова версія",
                 "zh-cn": "首次出版"
             }
         },
-        "title": "Mitsubishi Aircon with RAC-WiFi-Modules",
         "titleLang": {
-            "en": "Mitsubishi Aircon with RAC-WiFi-Modules",
-            "de": "Mitsubishi Aircon with RAC-WiFi-Modules",
-            "ru": "Mitsubishi Aircon with RAC-WiFi-Modules",
-            "pt": "Mitsubishi Aircon with RAC-WiFi-Modules",
-            "nl": "Mitsubishi Aircon with RAC-WiFi-Modules",
-            "fr": "Mitsubishi Aircon with RAC-WiFi-Modules",
-            "it": "Mitsubishi Aircon with RAC-WiFi-Modules",
-            "es": "Mitsubishi Aircon with RAC-WiFi-Modules",
-            "pl": "Mitsubishi Aircon with RAC-WiFi-Modules",
-            "zh-cn": "Mitsubishi Aircon with RAC-WiFi-Modules"
+            "en": "Mitsubishi Heavy WF-RAC",
+            "de": "Mitsubishi Heavy WF-RAC",
+            "ru": "Mitsubishi Heavy WF-RAC",
+            "pt": "Mitsubishi pesado wf-rac",
+            "nl": "Mitsubishi Heavy WF-RAC",
+            "fr": "Mitsubishi lourd wf-rac",
+            "it": "Mitsubishi Heavy Wf-Rac",
+            "es": "Mitsubishi pesado WF-RAC",
+            "pl": "Mitsubishi Heavy WF-Rac",
+            "uk": "Mitsubishi важкий WF-RAC",
+            "zh-cn": "三菱重型wf-rac"
         },
         "desc": {
-            "en": "Mitsubishi Aircon Adapter for RAC-WiFi-Modules",
-            "de": "Mitsubishi Aircon Adapter for RAC-WiFi-Modules",
-            "ru": "Mitsubishi Aircon Adapter for RAC-WiFi-Modules",
-            "pt": "Mitsubishi Aircon Adapter for RAC-WiFi-Modules",
-            "nl": "Mitsubishi Aircon Adapter for RAC-WiFi-Modules",
-            "fr": "Mitsubishi Aircon Adapter for RAC-WiFi-Modules",
-            "it": "Mitsubishi Aircon Adapter for RAC-WiFi-Modules",
-            "es": "Mitsubishi Aircon Adapter for RAC-WiFi-Modules",
-            "pl": "Mitsubishi Aircon Adapter for RAC-WiFi-Modules",
-            "zh-cn": "Mitsubishi Aircon Adapter for RAC-WiFi-Modules"
+            "en": "Mitsubishi Heavy Industries Air Conditioners with WLAN Adapter WF-RAC",
+            "de": "Mitsubishi Heavy Industries Klimaanlagen mit WLAN-Adapter WF-RAC",
+            "ru": "Mitsubishi Heavy Industries Air Conditioners с WLAN Adapter WF-RAC",
+            "pt": "Mitsubishi Heavys Industries Air Conditioners com adaptador WLAN WF-RAC",
+            "nl": "Mitsubishi Heavy Industries airconditioners met WLAN-adapter WF-RAC",
+            "fr": "Mitsubishi Heavy Industries Climatiseurs avec adaptateur WLAN WF-RAC",
+            "it": "Condizionatori d'aria Mitsubishi Heavy Industries con adattatore WLAN WF-RAC",
+            "es": "Aire acondicionadores de Mitsubishi Heavy Industries con adaptador WLAN WF-RAC",
+            "pl": "Mitsubishi Heavy Industries Klimatyzatory z adapterem WLAN WF-RAC",
+            "uk": "Mitsubishi Heavy Industries кондиціонери з адаптером WLAN WF-RAC",
+            "zh-cn": "三菱重工空调与WLAN适配器WF-RAC"
         },
         "authors": [
+            "hacki11 <hacko@mailbox.org>",
+            "W0w3",
             "wolkeSoftware <wolkesoftware@gmail.com>"
         ],
         "keywords": [
-            "Mitsubishi Aircon", "MHI", "Air Condition", "Mitsubishi Havy Industries"
+            "Mitsubishi",
+            "Mitsubishi Heavy Industries",
+            "Aircon",
+            "WF-RAC",
+            "MHI",
+            "AC",
+            "Airconditioner"
         ],
-        "license": "MIT",
+        "licenseInformation": {
+            "type": "free",
+            "license": "MIT"
+        },
         "platform": "Javascript/Node.js",
-        "main": "main.js",
-        "icon": "mhi_aircon.png",
+        "icon": "mhi-wfrac.png",
         "enabled": true,
-        "extIcon": "https://github.com/W0w3/ioBroker.mhi_aircon/blob/main/admin/mhi_aircon.png",
-        "readme": "https://github.com/W0w3/ioBroker.mhi_aircon/blob/main/README.md",
+        "extIcon": "https://raw.githubusercontent.com/hacki11/ioBroker.mhi-wfrac/main/admin/mhi-wfrac.png",
+        "readme": "https://github.com/hacki11/ioBroker.mhi-wfrac/blob/main/README.md",
         "loglevel": "info",
+        "tier": 3,
         "mode": "daemon",
         "type": "climate-control",
         "compact": true,
@@ -69,18 +91,18 @@
         },
         "dependencies": [
             {
-                "js-controller": ">=3.3.22"
+                "js-controller": ">=6.0.11"
             }
         ],
         "globalDependencies": [
             {
-                "admin": ">=5.1.13"
+                "admin": ">=7.4.10"
             }
         ]
     },
     "native": {
-        "ip": "",
-        "timer": 0
+        "interval": 20,
+        "devices": [{}]
     },
     "objects": [],
     "instanceObjects": [

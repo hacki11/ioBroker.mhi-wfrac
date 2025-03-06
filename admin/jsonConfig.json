@@ -2,16 +2,71 @@
     "i18n": true,
     "type": "panel",
     "items": {
-        "ip": {
-            "type": "text",
-            "label": "IP-Address of the Aircon",
-            "newLine": true
+        "hdrIps": {
+            "type": "header",
+            "text": "Air Conditioners",
+            "label": "airConditioners",
+            "size": 2
         },
-        "timer": {
+        "devices": {
+            "type": "table",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12,
+            "label": "",
+            "showSecondAddAt": 5,
+            "items": [
+                {
+                    "type": "checkbox",
+                    "attr": "enabled",
+                    "width": "16%",
+                    "title": "Enabled",
+                    "tooltip": "Enabled",
+                    "filter": false,
+                    "sort": false,
+                    "default": true
+                },
+                {
+                    "type": "text",
+                    "attr": "ip",
+                    "width": "16% ",
+                    "title": "ip",
+                    "tooltip": "ipTooltip",
+                    "filter": false,
+                    "sort": false,
+                    "default": ""
+                },
+                {
+                    "type": "text",
+                    "attr": "name",
+                    "width": "16% ",
+                    "title": "Name",
+                    "filter": false,
+                    "sort": false,
+                    "default": ""
+                }
+            ]
+        },
+        "hdrGeneric": {
+            "type": "header",
+            "text": "Generic Settings",
+            "label": "hdrGeneric",
+            "size": 2
+        },
+        "interval": {
             "type": "number",
-            "label": "Time in min to retrieve data from the aircon",
-            "newLine": true
+            "label": "interval",
+            "newLine": true,
+            "default": 20,
+            "min": 5,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
         }
-
     }
 }

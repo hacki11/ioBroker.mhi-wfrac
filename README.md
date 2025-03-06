@@ -35,7 +35,7 @@ Additional functions are already set up, but not integrated right now (de-regist
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### 2.0.0-alpha.1 (2025-03-06)
+### **WORK IN PROGRESS**
 * (hacki11) Bring Adapter Stable
 * (hacki11) Support multiple devices
 

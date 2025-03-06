@@ -1,131 +1,146 @@
 {
-    "common": {
-        "name": "mhi-wfrac",
-        "version": "1.0.2",
-        "news": {
-            "1.0.2": {
-                "en": "Support 3D-Auto (Entrust)",
-                "de": "Support 3D-Auto (Entrust)",
-                "ru": "Поддержка 3D-Auto (Entrust)",
-                "pt": "Suporte 3D-Auto (Entrust)",
-                "nl": "Ondersteuning 3D-Auto (Vertrouwen)",
-                "fr": "Soutien 3D-Auto (Entrust)",
-                "it": "Supporto 3D-Auto (Entrust)",
-                "es": "Soporte 3D-Auto (Entrust)",
-                "pl": "Wsparcie 3D- Auto (Entrust)",
-                "uk": "Підтримка 3D-Авто (Довіра)",
-                "zh-cn": "支持 3D- Auto( 信任)"
-            },
-            "0.0.1": {
-                "en": "initial release",
-                "de": "Erstveröffentlichung",
-                "ru": "Начальная версия",
-                "pt": "lançamento inicial",
-                "nl": "Eerste uitgave",
-                "fr": "Première version",
-                "it": "Versione iniziale",
-                "es": "Versión inicial",
-                "pl": "Pierwsze wydanie",
-                "uk": "Початкова версія",
-                "zh-cn": "首次出版"
-            }
-        },
-        "titleLang": {
-            "en": "Mitsubishi Heavy WF-RAC",
-            "de": "Mitsubishi Heavy WF-RAC",
-            "ru": "Mitsubishi Heavy WF-RAC",
-            "pt": "Mitsubishi pesado wf-rac",
-            "nl": "Mitsubishi Heavy WF-RAC",
-            "fr": "Mitsubishi lourd wf-rac",
-            "it": "Mitsubishi Heavy Wf-Rac",
-            "es": "Mitsubishi pesado WF-RAC",
-            "pl": "Mitsubishi Heavy WF-Rac",
-            "uk": "Mitsubishi важкий WF-RAC",
-            "zh-cn": "三菱重型wf-rac"
-        },
-        "desc": {
-            "en": "Mitsubishi Heavy Industries Air Conditioners with WLAN Adapter WF-RAC",
-            "de": "Mitsubishi Heavy Industries Klimaanlagen mit WLAN-Adapter WF-RAC",
-            "ru": "Mitsubishi Heavy Industries Air Conditioners с WLAN Adapter WF-RAC",
-            "pt": "Mitsubishi Heavys Industries Air Conditioners com adaptador WLAN WF-RAC",
-            "nl": "Mitsubishi Heavy Industries airconditioners met WLAN-adapter WF-RAC",
-            "fr": "Mitsubishi Heavy Industries Climatiseurs avec adaptateur WLAN WF-RAC",
-            "it": "Condizionatori d'aria Mitsubishi Heavy Industries con adattatore WLAN WF-RAC",
-            "es": "Aire acondicionadores de Mitsubishi Heavy Industries con adaptador WLAN WF-RAC",
-            "pl": "Mitsubishi Heavy Industries Klimatyzatory z adapterem WLAN WF-RAC",
-            "uk": "Mitsubishi Heavy Industries кондиціонери з адаптером WLAN WF-RAC",
-            "zh-cn": "三菱重工空调与WLAN适配器WF-RAC"
-        },
-        "authors": [
-            "hacki11 <hacko@mailbox.org>",
-            "W0w3",
-            "wolkeSoftware <wolkesoftware@gmail.com>"
-        ],
-        "keywords": [
-            "Mitsubishi",
-            "Mitsubishi Heavy Industries",
-            "Aircon",
-            "WF-RAC",
-            "MHI",
-            "AC",
-            "Airconditioner"
-        ],
-        "licenseInformation": {
-            "type": "free",
-            "license": "MIT"
-        },
-        "platform": "Javascript/Node.js",
-        "icon": "mhi-wfrac.png",
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/hacki11/ioBroker.mhi-wfrac/main/admin/mhi-wfrac.png",
-        "readme": "https://github.com/hacki11/ioBroker.mhi-wfrac/blob/main/README.md",
-        "loglevel": "info",
-        "tier": 3,
-        "mode": "daemon",
-        "type": "climate-control",
-        "compact": true,
-        "connectionType": "local",
-        "dataSource": "poll",
-        "adminUI": {
-            "config": "json"
-        },
-        "dependencies": [
-            {
-                "js-controller": ">=6.0.11"
-            }
-        ],
-        "globalDependencies": [
-            {
-                "admin": ">=7.4.10"
-            }
-        ]
+  "common": {
+    "name": "mhi-wfrac",
+    "version": "2.0.0-alpha.0",
+    "news": {
+      "2.0.0-alpha.0": {
+        "en": "Bring Adapter Stable\nSupport multiple devices",
+        "de": "Adapter Stable\nUnterstützung mehrerer Geräte",
+        "ru": "Принесите адаптер стабильный\nПоддержка нескольких устройств",
+        "pt": "Trazer adaptador estável\nSuporte a vários dispositivos",
+        "nl": "Adapter stabiel meenemen\nMeerdere apparaten ondersteunen",
+        "fr": "Apportez l'adaptateur stable\nPrise en charge de plusieurs appareils",
+        "it": "Porta adattatore stabile\nSupporta più dispositivi",
+        "es": "Traiga adaptador Stable\nSoporta múltiples dispositivos",
+        "pl": "Przynieś stabilny adapter\nObsługa wielu urządzeń",
+        "uk": "Адаптер Bring Stable\nПідтримка декількох пристроїв",
+        "zh-cn": "带适配器稳定\n支持多个设备"
+      },
+      "1.0.2": {
+        "en": "Support 3D-Auto (Entrust)",
+        "de": "Support 3D-Auto (Entrust)",
+        "ru": "Поддержка 3D-Auto (Entrust)",
+        "pt": "Suporte 3D-Auto (Entrust)",
+        "nl": "Ondersteuning 3D-Auto (Vertrouwen)",
+        "fr": "Soutien 3D-Auto (Entrust)",
+        "it": "Supporto 3D-Auto (Entrust)",
+        "es": "Soporte 3D-Auto (Entrust)",
+        "pl": "Wsparcie 3D- Auto (Entrust)",
+        "uk": "Підтримка 3D-Авто (Довіра)",
+        "zh-cn": "支持 3D- Auto( 信任)"
+      },
+      "0.0.1": {
+        "en": "initial release",
+        "de": "Erstveröffentlichung",
+        "ru": "Начальная версия",
+        "pt": "lançamento inicial",
+        "nl": "Eerste uitgave",
+        "fr": "Première version",
+        "it": "Versione iniziale",
+        "es": "Versión inicial",
+        "pl": "Pierwsze wydanie",
+        "uk": "Початкова версія",
+        "zh-cn": "首次出版"
+      }
     },
-    "native": {
-        "interval": 20,
-        "devices": [{}]
+    "titleLang": {
+      "en": "Mitsubishi Heavy WF-RAC",
+      "de": "Mitsubishi Heavy WF-RAC",
+      "ru": "Mitsubishi Heavy WF-RAC",
+      "pt": "Mitsubishi pesado wf-rac",
+      "nl": "Mitsubishi Heavy WF-RAC",
+      "fr": "Mitsubishi lourd wf-rac",
+      "it": "Mitsubishi Heavy Wf-Rac",
+      "es": "Mitsubishi pesado WF-RAC",
+      "pl": "Mitsubishi Heavy WF-Rac",
+      "uk": "Mitsubishi важкий WF-RAC",
+      "zh-cn": "三菱重型wf-rac"
     },
-    "objects": [],
-    "instanceObjects": [
-        {
-            "_id": "info",
-            "type": "channel",
-            "common": {
-                "name": "Information"
-            },
-            "native": {}
-        },
-        {
-            "_id": "info.connection",
-            "type": "state",
-            "common": {
-                "role": "indicator.connected",
-                "name": "Device or service connected",
-                "type": "boolean",
-                "read": true,
-                "write": false,
-                "def": false
-            },
-            "native": {}
-        }
+    "desc": {
+      "en": "Mitsubishi Heavy Industries Air Conditioners with WLAN Adapter WF-RAC",
+      "de": "Mitsubishi Heavy Industries Klimaanlagen mit WLAN-Adapter WF-RAC",
+      "ru": "Mitsubishi Heavy Industries Air Conditioners с WLAN Adapter WF-RAC",
+      "pt": "Mitsubishi Heavys Industries Air Conditioners com adaptador WLAN WF-RAC",
+      "nl": "Mitsubishi Heavy Industries airconditioners met WLAN-adapter WF-RAC",
+      "fr": "Mitsubishi Heavy Industries Climatiseurs avec adaptateur WLAN WF-RAC",
+      "it": "Condizionatori d'aria Mitsubishi Heavy Industries con adattatore WLAN WF-RAC",
+      "es": "Aire acondicionadores de Mitsubishi Heavy Industries con adaptador WLAN WF-RAC",
+      "pl": "Mitsubishi Heavy Industries Klimatyzatory z adapterem WLAN WF-RAC",
+      "uk": "Mitsubishi Heavy Industries кондиціонери з адаптером WLAN WF-RAC",
+      "zh-cn": "三菱重工空调与WLAN适配器WF-RAC"
+    },
+    "authors": [
+      "hacki11 <hacko@mailbox.org>",
+      "W0w3",
+      "wolkeSoftware <wolkesoftware@gmail.com>"
+    ],
+    "keywords": [
+      "Mitsubishi",
+      "Mitsubishi Heavy Industries",
+      "Aircon",
+      "WF-RAC",
+      "MHI",
+      "AC",
+      "Airconditioner"
+    ],
+    "licenseInformation": {
+      "type": "free",
+      "license": "MIT"
+    },
+    "platform": "Javascript/Node.js",
+    "icon": "mhi-wfrac.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/hacki11/ioBroker.mhi-wfrac/main/admin/mhi-wfrac.png",
+    "readme": "https://github.com/hacki11/ioBroker.mhi-wfrac/blob/main/README.md",
+    "loglevel": "info",
+    "tier": 3,
+    "mode": "daemon",
+    "type": "climate-control",
+    "compact": true,
+    "connectionType": "local",
+    "dataSource": "poll",
+    "adminUI": {
+      "config": "json"
+    },
+    "dependencies": [
+      {
+        "js-controller": ">=6.0.11"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=7.4.10"
+      }
     ]
+  },
+  "native": {
+    "interval": 20,
+    "devices": [
+      {}
+    ]
+  },
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "role": "indicator.connected",
+        "name": "Device or service connected",
+        "type": "boolean",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    }
+  ]
 }

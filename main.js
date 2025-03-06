@@ -320,21 +320,6 @@ class MHIWFRac extends utils.Adapter {
         });
         this.subscribeStates(`${airconId}.swingVertical`);
 
-        /*
-        await this.setObjectNotExistsAsync("autoHeating", {
-            type: "state",
-            common: {
-                name: "Auto Heating",
-                type: "number",
-                role: "switch.mode.auto",
-                read: true,
-                write: false,
-            },
-            native: {},
-        });
-        //this.subscribeStates("autoHeating");
-        */
-
         await this.setObjectNotExistsAsync(`${airconId}.coolHotJudge`, {
             type: "state",
             common: {
@@ -535,7 +520,7 @@ class MHIWFRac extends utils.Adapter {
             common: {
                 name: "Auto Heating",
                 type: "number",
-                role: "value",
+                role: "indicator",
                 read: true,
                 write: false,
             },

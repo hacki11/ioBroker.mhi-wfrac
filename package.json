@@ -17,6 +17,7 @@
   "homepage": "https://github.com/hacki11/ioBroker.mhi-wfrac",
   "license": "MIT",
   "keywords": [
+    "ioBroker",
     "Mitsubishi",
     "Aircon",
     "WF-RAC",

@@ -4,5 +4,6 @@
     "interval": "Richiedi intervallo in secondi",
     "hdrGeneric": "Impostazioni generiche",
     "airConditioners": "Condizionatori d'aria",
-    "ipTooltip": "Indirizzo IP del condizionatore d'aria"
+    "ipTooltip": "Indirizzo IP del condizionatore d'aria",
+    "name": "Nome"
 }

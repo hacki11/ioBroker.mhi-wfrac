@@ -4,5 +4,6 @@
     "interval": "秒请求间隔",
     "hdrGeneric": "通用设置",
     "airConditioners": "空调",
-    "ipTooltip": "空调的IP地址"
+    "ipTooltip": "空调的IP地址",
+    "name": "姓名"
 }

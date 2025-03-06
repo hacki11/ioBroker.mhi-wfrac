@@ -4,5 +4,6 @@
     "hdrGeneric": "Generic Settings",
     "ip": "IP Address",
     "airConditioners": "Air Conditioners",
-    "ipTooltip": "IP address of the air conditioner"
+    "ipTooltip": "IP address of the air conditioner",
+    "name": "Name"
 }

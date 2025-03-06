@@ -101,8 +101,8 @@
         ]
     },
     "native": {
-        "ip": "",
-        "timer": 0
+        "interval": 20,
+        "devices": [{}]
     },
     "objects": [],
     "instanceObjects": [

@@ -4,5 +4,6 @@
     "interval": "Demander l'intervalle en secondes",
     "hdrGeneric": "Paramètres génériques",
     "airConditioners": "Climatiseurs",
-    "ipTooltip": "Adresse IP du climatiseur"
+    "ipTooltip": "Adresse IP du climatiseur",
+    "name": "Nom"
 }

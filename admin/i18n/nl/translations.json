@@ -4,5 +4,6 @@
     "interval": "Verzoek interval in seconden",
     "hdrGeneric": "Generieke instellingen",
     "airConditioners": "Airconditioners",
-    "ipTooltip": "IP -adres van de airconditioner"
+    "ipTooltip": "IP -adres van de airconditioner",
+    "name": "Naam"
 }

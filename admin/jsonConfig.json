@@ -8,7 +8,7 @@
             "label": "airConditioners",
             "size": 2
         },
-        "table": {
+        "devices": {
             "type": "table",
             "newLine": true,
             "sm": 12,
@@ -20,7 +20,7 @@
             "items": [
                 {
                     "type": "checkbox",
-                    "attr": "ipEnabled",
+                    "attr": "enabled",
                     "width": "16%",
                     "title": "Enabled",
                     "tooltip": "Enabled",
@@ -34,6 +34,15 @@
                     "width": "16% ",
                     "title": "ip",
                     "tooltip": "ipTooltip",
+                    "filter": false,
+                    "sort": false,
+                    "default": ""
+                },
+                {
+                    "type": "text",
+                    "attr": "name",
+                    "width": "16% ",
+                    "title": "Name",
                     "filter": false,
                     "sort": false,
                     "default": ""

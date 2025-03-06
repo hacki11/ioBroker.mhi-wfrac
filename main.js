@@ -5,8 +5,7 @@
  */
 
 const utils = require("@iobroker/adapter-core");
-const AirconStatClass = require("./lib/AirconStat.js");
-const AirconCoderClass = require("./lib/AirconStatCoder.js");
+const AirconData = require("./lib/Device.js");
 const axios = require("axios");
 
 const KEY_AIRCON_ID = "airconId";
@@ -40,52 +39,40 @@ class MHIWFRac extends utils.Adapter {
         this.on("ready", this.onReady.bind(this));
         this.on("stateChange", this.onStateChange.bind(this));
         this.on("unload", this.onUnload.bind(this));
-        this.AirconStat = new AirconStatClass();
-        this.DeviceId = AIRCON_DEVICEID;
-        this.AirconId = "";
-        this.AirconMac = "";
-        this.AirconApMode = 0;
-        this.firmwareVersion_wireless = "";
-        this.firmwareVersion_mcu = "";
-        this.firmwareType = "";
-        this.connected_accounts = 0;
-        this.name = "";
-        this.lastError = "";
-        this.autoHeating = 0;
-        this.ledStat = 0;
-        this.acCoder = new AirconCoderClass(this.log);
+        this.devices = {};
     }
 
     /**
      * Is called when databases are connected and adapter received configuration.
      */
     async onReady() {
-        // Initialize your adapter here
-
         // Reset the connection indicator during startup
         this.setState("info.connection", false, true);
 
-        this.log.debug("onReady::register_airco");
-        await this.register_airco();
-
-        if (this.AirconId != "") {
-            this.setState("info.connection", true, true);
-
-            this.log.debug("onReady::initIOBStates");
-            await this.initIOBStates(this.AirconId);
-            this.log.debug("onReady::getDataFromMitsu");
-            await this.getDataFromMitsu();
-            this.log.debug("onReady::setIOBStates");
-            await this.setIOBStates(this.AirconId);
-
-            //get data from aircon and start timer
-            if (this.config.timer > 0) {
-                this.getDataFromAircon();
+        for (const device of this.config.devices) {
+            if (device["enabled"]) {
+                this.log.debug(`onReady::register(${device["ip"]}/${device["name"]})`);
+                await this.register(device["ip"], device["name"]);
             }
         }
+        const allRegistered = Object.values(this.devices)
+            .filter(d => d.registered)
+            .length == this.config.devices.length;
+
+        this.setState("info.connection", allRegistered, true);
+
+        for (const device of Object.values(this.devices)) {
+            this.log.debug("onReady::initIOBStates");
+            await this.initIOBStates(device);
+        }
+
+        this.update();
     }
 
-    async setStateVal(id, val) {
+    async setStateVal(id, state) {
+        const airconId = await this.getObjectAsync(id).then(obj => obj?.native.airconId);
+        const val = state.val;
+        const device = this.devices[airconId];
         let valchange = 0;
         let idS = "";
         const h = id.split(".");
@@ -94,73 +81,84 @@ class MHIWFRac extends utils.Adapter {
         }
         switch (idS) {
             case "power":
-                this.AirconStat.operation = val;
+                device.airconStat.operation = val;
                 valchange++;
                 break;
             case "mode":
-                this.AirconStat.operationMode = val;
+                device.airconStat.operationMode = val;
                 valchange++;
                 break;
             case "fanSpeed":
-                this.AirconStat.airFlow = val;
+                device.airconStat.airFlow = val;
                 valchange++;
                 break;
             case "targetTemperature":
-                this.AirconStat.presetTemp = val;
+                device.airconStat.presetTemp = val;
                 valchange++;
                 break;
             case "swingLeftRight":
-                this.AirconStat.windDirectionLR = val;
+                device.airconStat.windDirectionLR = val;
                 valchange++;
                 break;
             case "swingUpDown":
-                this.AirconStat.windDirectionUD = val;
+                device.airconStat.windDirectionUD = val;
                 valchange++;
                 break;
             case "3dAuto":
-                this.AirconStat.entrust = val;
+                device.airconStat.entrust = val;
                 valchange++;
                 break;
         }
         if (valchange > 0) {
-            await this.sendDataToMitsu();
-            this.setIOBStates();
+            await this.sendDataToDevice(device);
+            await this.setIOBStates(device);
         }
     }
 
-    async setIOBStates(airconId) {
-        try{
-            await this.setState(`${airconId}.power`, this.AirconStat.operation, true);
-            await this.setState(`${airconId}.mode`, this.AirconStat.operationMode, true);
-            await this.setState(`${airconId}.fanSpeed`, this.AirconStat.airFlow, true);
-            await this.setState(`${airconId}.model`, "" + this.AirconStat.modelNo, true);
-            await this.setState(`${airconId}.indoorTemperature`, this.AirconStat.indoorTemp, true);
-            await this.setState(`${airconId}.outdoorTemperature`, this.AirconStat.outdoorTemp, true);
-            await this.setState(`${airconId}.targetTemperature`, this.AirconStat.presetTemp, true);
-            await this.setState(`${airconId}.swingLeftRight`, this.AirconStat.windDirectionLR, true);
-            await this.setState(`${airconId}.swingUpDown`, this.AirconStat.windDirectionUD, true);
-            await this.setState(`${airconId}.coolHotJudge`, this.AirconStat.coolHotJudge, true);
-            await this.setState(`${airconId}.electric`, this.AirconStat.electric, true);
-            await this.setState(`${airconId}.3dAuto`, this.AirconStat.entrust, true);
-            await this.setState(`${airconId}.errorCode`, this.AirconStat.errorCode, true);
-            await this.setState(`${airconId}.selfCleanOperation`, this.AirconStat.isSelfCleanOperation, true);
-            await this.setState(`${airconId}.selfCleanReset`, this.AirconStat.isSelfCleanReset, true);
-            await this.setState(`${airconId}.vacant`, this.AirconStat.isVacantProperty, true);
-            await this.setState(`${airconId}.apMode`, this.AirconApMode, true);
-            await this.setState(`${airconId}.airconId`, this.AirconId, true);
-            await this.setState(`${airconId}.macAddress`, this.AirconMac, true);
-            await this.setState(`${airconId}.ledStatus`, this.ledStat, true);
-            await this.setState(`${airconId}.firmwareType`, this.firmwareType, true);
-            await this.setState(`${airconId}.wirelessFirmwareVersion`, this.firmwareVersion_wireless, true);
-            await this.setState(`${airconId}.mcuFirmwareVersion`, this.firmwareVersion_mcu, true);
-            await this.setState(`${airconId}.accounts`, this.connected_accounts, true);
-            await this.setState(`${airconId}.autoHeating`, this.autoHeating, true);
-        } catch(e){
-            this.log.error(JSON.stringify(this.AirconStat));
+    async setIOBStates(device) {
+        const airconId = device.airconId;
+        try {
+            await this.setState(`${airconId}.power`, device.airconStat.operation, true);
+            await this.setState(`${airconId}.mode`, device.airconStat.operationMode, true);
+            await this.setState(`${airconId}.fanSpeed`, device.airconStat.airFlow, true);
+            await this.setState(`${airconId}.model`, "" + device.airconStat.modelNo, true);
+            await this.setState(`${airconId}.indoorTemperature`, device.airconStat.indoorTemp, true);
+            await this.setState(`${airconId}.outdoorTemperature`, device.airconStat.outdoorTemp, true);
+            await this.setState(`${airconId}.targetTemperature`, device.airconStat.presetTemp, true);
+            await this.setState(`${airconId}.swingLeftRight`, device.airconStat.windDirectionLR, true);
+            await this.setState(`${airconId}.swingUpDown`, device.airconStat.windDirectionUD, true);
+            await this.setState(`${airconId}.coolHotJudge`, device.airconStat.coolHotJudge, true);
+            await this.setState(`${airconId}.electric`, device.airconStat.electric, true);
+            await this.setState(`${airconId}.3dAuto`, device.airconStat.entrust, true);
+            await this.setState(`${airconId}.errorCode`, device.airconStat.errorCode, true);
+            await this.setState(`${airconId}.selfCleanOperation`, device.airconStat.isSelfCleanOperation, true);
+            await this.setState(`${airconId}.selfCleanReset`, device.airconStat.isSelfCleanReset, true);
+            await this.setState(`${airconId}.vacant`, device.airconStat.isVacantProperty, true);
+            await this.setState(`${airconId}.apMode`, device.airconApMode, true);
+            await this.setState(`${airconId}.airconId`, device.airconId, true);
+            await this.setState(`${airconId}.macAddress`, device.airconMac, true);
+            await this.setState(`${airconId}.ledStatus`, device.ledStat, true);
+            await this.setState(`${airconId}.firmwareType`, device.firmwareType, true);
+            await this.setState(`${airconId}.wirelessFirmwareVersion`, device.firmwareVersion_wireless, true);
+            await this.setState(`${airconId}.mcuFirmwareVersion`, device.firmwareVersion_mcu, true);
+            await this.setState(`${airconId}.accounts`, device.connected_accounts, true);
+            await this.setState(`${airconId}.autoHeating`, device.autoHeating, true);
+        } catch (e) {
+            this.errorHandler(`Error setting ioBroker state! | ${JSON.stringify(device.airconStat)}`);
         }
     }
 
-    async initIOBStates(airconId) {
+    async initIOBStates(device) {
+        const airconId = device.airconId;
+
+        await this.setObjectNotExistsAsync(airconId, {
+            type: "channel",
+            common: {
+                name: device.name,
+            },
+            native: {},
+        });
+
         await this.setObjectNotExistsAsync(`${airconId}.power`, {
             type: "state",
             common: {
@@ -170,7 +168,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: true,
             },
-            native: {},
+            native: { "airconId": airconId },
         });
 
         // In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
@@ -194,7 +192,7 @@ class MHIWFRac extends utils.Adapter {
                     4: "Dry"
                 }
             },
-            native: {},
+            native: { "airconId": airconId },
         });
         this.subscribeStates(`${airconId}.mode`);
 
@@ -216,7 +214,7 @@ class MHIWFRac extends utils.Adapter {
                     4: "max"
                 }
             },
-            native: {},
+            native: { "airconId": airconId },
         });
         this.subscribeStates(`${airconId}.fanSpeed`);
 
@@ -229,7 +227,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: {},
+            native: { "airconId": airconId },
         });
         this.subscribeStates(`${airconId}.model`);
 
@@ -242,7 +240,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: {},
+            native: { "airconId": airconId },
         });
         //this.subscribeStates("indoorTemperature");
 
@@ -255,7 +253,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: {},
+            native: { "airconId": airconId },
         });
         //this.subscribeStates("outdoorTemperature");
 
@@ -271,7 +269,7 @@ class MHIWFRac extends utils.Adapter {
                 max: 30,
                 step: 0.5
             },
-            native: {},
+            native: { "airconId": airconId },
         });
         this.subscribeStates(`${airconId}.targetTemperature`);
 
@@ -296,7 +294,7 @@ class MHIWFRac extends utils.Adapter {
                     7: "spot"
                 }
             },
-            native: {},
+            native: { "airconId": airconId },
         });
         this.subscribeStates(`${airconId}.swingLeftRight`);
 
@@ -318,7 +316,7 @@ class MHIWFRac extends utils.Adapter {
                     4: "lower"
                 }
             },
-            native: {},
+            native: { "airconId": airconId },
         });
         this.subscribeStates(`${airconId}.swingVertical`);
 
@@ -346,7 +344,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: {},
+            native: { "airconId": airconId },
         });
         //this.subscribeStates("coolHotJudge");
 
@@ -359,7 +357,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: {},
+            native: { "airconId": airconId },
         });
         //this.subscribeStates("electric");
 
@@ -372,7 +370,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: true,
             },
-            native: {},
+            native: { "airconId": airconId },
         });
         this.subscribeStates(`${airconId}.3dAuto`);
 
@@ -385,7 +383,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: {},
+            native: { "airconId": airconId },
         });
         //this.subscribeStates("errorCode");
 
@@ -398,7 +396,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: {},
+            native: { "airconId": airconId },
         });
         //this.subscribeStates("Self-Clean-Operation");
 
@@ -411,7 +409,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: {},
+            native: { "airconId": airconId },
         });
         //this.subscribeStates("Self-Clean-Reset");
 
@@ -424,7 +422,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: {},
+            native: { "airconId": airconId },
         });
         //this.subscribeStates("Vacant");
 
@@ -437,7 +435,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: {},
+            native: { "airconId": airconId },
         });
         //this.subscribeStates("AP-Mode");
 
@@ -450,7 +448,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: {},
+            native: { "airconId": airconId },
         });
         //this.subscribeStates("Aircon-ID");
 
@@ -463,7 +461,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: {},
+            native: { "airconId": airconId },
         });
         //this.subscribeStates("macAddress");
 
@@ -476,7 +474,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: {},
+            native: { "airconId": airconId },
         });
         //this.subscribeStates("ledStat");
 
@@ -489,7 +487,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: {},
+            native: { "airconId": airconId },
         });
         //this.subscribeStates("Firmware-Type");
 
@@ -502,7 +500,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: {},
+            native: { "airconId": airconId },
         });
         //this.subscribeStates("wirelessFirmwareVersion");
 
@@ -515,7 +513,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: {},
+            native: { "airconId": airconId },
         });
         //this.subscribeStates("mcuFirmwareVersion");
 
@@ -528,7 +526,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: {},
+            native: { "airconId": airconId },
         });
         //this.subscribeStates("Accounts");
 
@@ -541,17 +539,17 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: {},
+            native: { "airconId": airconId },
         });
         //this.subscribeStates("Auto-Heating");
     }
 
-    async getDataFromAircon() {
-        if (this.AirconId != "") {
-            await this.getDataFromMitsu();
-            await this.setIOBStates(this.AirconId);
+    async update() {
+        for (const device of Object.values(this.devices)) {
+            await this.getDataFromDevice(device);
+            await this.setIOBStates(device);
         }
-        setTimeout(() => this.getDataFromAircon(), (this.config.timer * 60000));
+        this.timeout = setTimeout(() => this.update(), (this.config.interval * 1000));
     }
 
     /**
@@ -561,10 +559,9 @@ class MHIWFRac extends utils.Adapter {
     onUnload(callback) {
         try {
             // Here you must clear all timeouts or intervals that may still be active
-            // clearTimeout(timeout1);
-            // clearTimeout(timeout2);
-            // ...
-            // clearInterval(interval1);
+            if(this.timeout) {
+                clearTimeout(this.timeout);
+            }
 
             callback();
         } catch (e) {
@@ -581,8 +578,8 @@ class MHIWFRac extends utils.Adapter {
         if (state) {
             // The state was changed
             if (state.ack === false) {
-                this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-                this.setStateVal(id, state.val);
+                this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+                this.setStateVal(id, state);
             }
         } else {
             // The state was deleted
@@ -590,9 +587,9 @@ class MHIWFRac extends utils.Adapter {
         }
     }
 
-    async _post(cmd, contents) {
+    async _post(address, cmd, contents) {
         await delay(2050);
-        const url = "http://" + this.config.ip + ":" + AIRCON_PORT;
+        const url = "http://" + address + ":" + AIRCON_PORT;
 
         const data = {
             "apiVer": "1.0",
@@ -605,7 +602,7 @@ class MHIWFRac extends utils.Adapter {
             data["contents"] = contents;
         }
 
-        const ret = {error:"", response:{}};
+        const ret = { error: "", response: {} };
         this.log.debug("_post | url:" + url + "::data: " + cmd + "::" + JSON.stringify(data));
 
         await axios.post(url, data, {
@@ -623,83 +620,84 @@ class MHIWFRac extends utils.Adapter {
             })
             .catch((error) => {
                 ret.error = error;
-                this.log.debug(`_post | Could not get Data: ${error}`);
+                this.errorHandler(`_post | Could not get Data: ${error}`);
             });
 
         return ret;
     }
 
-    async update_account_info() {
+    async update_account_info(address, airconId) {
         //Update the account info on the airco (sets to operator id of the device)
         const contents = {
             "accountId": OPERATORID,
-            [KEY_AIRCON_ID]: this.AirconId,
+            [KEY_AIRCON_ID]: airconId,
             "remote": 0,
             "timezone": TIMEZONE
         };
-        await this._post(COMMAND_UPDATE_ACCOUNT_INFO, contents);
+        await this._post(address, COMMAND_UPDATE_ACCOUNT_INFO, contents);
     }
 
-    async register_airco() {
-        await this._post(COMMAND_GET_DEVICE_INFO)
+    async register(address, name) {
+        await this._post(address, COMMAND_GET_DEVICE_INFO)
             .then(async (ret) => {
                 if (ret.error === "") {
-                    this.log.debug("register_airco | return: " + JSON.stringify(ret));
-                    this.AirconId = ret.response.contents.airconId;
-                    this.AirconApMode = ret.response.contents.apMode;
-                    this.AirconMac = ret.response.contents.macAddress;
+                    this.log.debug(`Register(${address}) | return: ${JSON.stringify(ret)}`);
+                    const airconData = new AirconData(this.log);
+                    airconData.name = name;
+                    airconData.airconAddress = address;
+                    airconData.airconId = ret.response.contents.airconId;
+                    airconData.airconApMode = ret.response.contents.apMode;
+                    airconData.airconMac = ret.response.contents.macAddress;
+                    airconData.registered = true;
+                    this.devices[airconData.airconId] = airconData;
 
-                    await this.update_account_info();
+                    await this.update_account_info(address, airconData.airconId);
                 } else {
-                    this.log.error("Failed register device! | " + JSON.stringify(ret));
+                    this.errorHandler(`Failed to register device! | ${JSON.stringify(ret)}`);
                 }
             })
-            .catch((error) => { this.log.error(error); });
+            .catch(error => this.errorHandler(`Failed to register device! | ${error}`));
     }
 
-    async getDataFromMitsu() {
+    errorHandler(error) {
+        this.log.error(error);
+        this.setState("info.connection", true, true);
+    }
+
+    async getDataFromDevice(device) {
         const contents = {
-            [KEY_AIRCON_ID]: this.AirconId
+            [KEY_AIRCON_ID]: device.airconId
         };
-        await this._post(COMMAND_GET_AIRCON_STAT, contents)
+        await this._post(device.airconAddress, COMMAND_GET_AIRCON_STAT, contents)
             .then((ret) => {
                 if (ret.error === "") {
-                    this.acCoder.fromBase64(this.AirconStat, ret.response.contents.airconStat);
-                    this.log.debug("getDataFromMitsu | AirconStat::" + JSON.stringify(this.AirconStat));
-
-                    this.firmwareVersion_wireless = ret.response.contents.wireless.firmVer;
-                    this.firmwareVersion_mcu = ret.response.contents.mcu.firmVer;
-                    this.firmwareType = ret.response.contents.firmType;
-                    this.connected_accounts = ret.response.contents.numOfAccount;
-                    this.ledStat = ret.response.contents.ledStat;
-                    this.autoHeating = ret.response.contents.autoHeating;
+                    device.acCoder.fromBase64(device.airconStat, ret.response.contents.airconStat);
+                    this.log.debug(`getDataFromDevice | AirconStat::${JSON.stringify(device.airconStat)}`);
+                    device.firmwareVersion_wireless = ret.response.contents.wireless.firmVer;
+                    device.firmwareVersion_mcu = ret.response.contents.mcu.firmVer;
+                    device.firmwareType = ret.response.contents.firmType;
+                    device.connected_accounts = ret.response.contents.numOfAccount;
+                    device.ledStat = ret.response.contents.ledStat;
+                    device.autoHeating = ret.response.contents.autoHeating;
                 }
             })
-            .catch((error) => {
-                this.log.error(`Could not get Data: ${error}`);
-            });
+            .catch(error => this.errorHandler(`Could not get Data: ${error}`));
     }
 
-    async sendDataToMitsu() {
+    async sendDataToDevice(device) {
         const contents = {
-            [KEY_AIRCON_ID]: this.AirconId,
-            [KEY_AIRCON_STAT]: this.acCoder.toBase64(this.AirconStat)
+            [KEY_AIRCON_ID]: device.airconId,
+            [KEY_AIRCON_STAT]: device.acCoder.toBase64(device.airconStat)
         };
 
-        await this._post(COMMAND_SET_AIRCON_STAT, contents)
+        await this._post(device.airconAddress, COMMAND_SET_AIRCON_STAT, contents)
             .then((ret) => {
                 if (ret.error === "") {
-                    this.acCoder.fromBase64(this.AirconStat, ret.response.contents.airconStat);
+                    device.acCoder.fromBase64(device.airconStat, ret.response.contents.airconStat);
                 }
             })
-            .catch((error) => {
-                this.log.error(`Could not send Data: ${error}`);
-            });
+            .catch(error => this.errorHandler(`Could not send Data: ${error}`));
     }
-
-    ////End of Data-Transfer-Functions
-
-
 }
 
 if (require.main !== module) {

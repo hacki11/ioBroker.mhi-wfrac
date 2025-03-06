@@ -1,9 +1,9 @@
 {
   "common": {
     "name": "mhi-wfrac",
-    "version": "2.0.0-alpha.0",
+    "version": "2.0.0-alpha.1",
     "news": {
-      "2.0.0-alpha.0": {
+      "2.0.0-alpha.1": {
         "en": "Bring Adapter Stable\nSupport multiple devices",
         "de": "Adapter Stable\nUnterstützung mehrerer Geräte",
         "ru": "Принесите адаптер стабильный\nПоддержка нескольких устройств",
@@ -15,32 +15,6 @@
         "pl": "Przynieś stabilny adapter\nObsługa wielu urządzeń",
         "uk": "Адаптер Bring Stable\nПідтримка декількох пристроїв",
         "zh-cn": "带适配器稳定\n支持多个设备"
-      },
-      "1.0.2": {
-        "en": "Support 3D-Auto (Entrust)",
-        "de": "Support 3D-Auto (Entrust)",
-        "ru": "Поддержка 3D-Auto (Entrust)",
-        "pt": "Suporte 3D-Auto (Entrust)",
-        "nl": "Ondersteuning 3D-Auto (Vertrouwen)",
-        "fr": "Soutien 3D-Auto (Entrust)",
-        "it": "Supporto 3D-Auto (Entrust)",
-        "es": "Soporte 3D-Auto (Entrust)",
-        "pl": "Wsparcie 3D- Auto (Entrust)",
-        "uk": "Підтримка 3D-Авто (Довіра)",
-        "zh-cn": "支持 3D- Auto( 信任)"
-      },
-      "0.0.1": {
-        "en": "initial release",
-        "de": "Erstveröffentlichung",
-        "ru": "Начальная версия",
-        "pt": "lançamento inicial",
-        "nl": "Eerste uitgave",
-        "fr": "Première version",
-        "it": "Versione iniziale",
-        "es": "Versión inicial",
-        "pl": "Pierwsze wydanie",
-        "uk": "Початкова версія",
-        "zh-cn": "首次出版"
       }
     },
     "titleLang": {

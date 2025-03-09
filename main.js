@@ -170,8 +170,6 @@ class MHIWFRac extends utils.Adapter {
             },
             native: { "airconId": airconId },
         });
-
-        // In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
         this.subscribeStates(`${airconId}.power`);
 
         await this.setObjectNotExistsAsync(`${airconId}.mode`, {
@@ -237,12 +235,12 @@ class MHIWFRac extends utils.Adapter {
                 name: "Indoor Temperature",
                 type: "number",
                 role: "value.temperature",
+                unit: "°C",
                 read: true,
                 write: false,
             },
             native: { "airconId": airconId },
         });
-        //this.subscribeStates("indoorTemperature");
 
         await this.setObjectNotExistsAsync(`${airconId}.outdoorTemperature`, {
             type: "state",
@@ -250,12 +248,12 @@ class MHIWFRac extends utils.Adapter {
                 name: "Outdoor Temperature",
                 type: "number",
                 role: "value.temperature",
+                unit: "°C",
                 read: true,
                 write: false,
             },
             native: { "airconId": airconId },
         });
-        //this.subscribeStates("outdoorTemperature");
 
         await this.setObjectNotExistsAsync(`${airconId}.targetTemperature`, {
             type: "state",
@@ -263,6 +261,7 @@ class MHIWFRac extends utils.Adapter {
                 name: "Target Temperature",
                 type: "number",
                 role: "level.temperature",
+                unit: "°C",
                 read: true,
                 write: true,
                 min: 18,
@@ -331,7 +330,6 @@ class MHIWFRac extends utils.Adapter {
             },
             native: { "airconId": airconId },
         });
-        //this.subscribeStates("coolHotJudge");
 
         await this.setObjectNotExistsAsync(`${airconId}.electric`, {
             type: "state",
@@ -339,12 +337,12 @@ class MHIWFRac extends utils.Adapter {
                 name: "electric",
                 type: "number",
                 role: "value.energy",
+                unit: "kWh",
                 read: true,
                 write: false,
             },
             native: { "airconId": airconId },
         });
-        //this.subscribeStates("electric");
 
         await this.setObjectNotExistsAsync(`${airconId}.3dAuto`, {
             type: "state",
@@ -370,7 +368,6 @@ class MHIWFRac extends utils.Adapter {
             },
             native: { "airconId": airconId },
         });
-        //this.subscribeStates("errorCode");
 
         await this.setObjectNotExistsAsync(`${airconId}.selfCleanOperation`, {
             type: "state",
@@ -383,7 +380,6 @@ class MHIWFRac extends utils.Adapter {
             },
             native: { "airconId": airconId },
         });
-        //this.subscribeStates("Self-Clean-Operation");
 
         await this.setObjectNotExistsAsync(`${airconId}.selfCleanReset`, {
             type: "state",
@@ -396,7 +392,6 @@ class MHIWFRac extends utils.Adapter {
             },
             native: { "airconId": airconId },
         });
-        //this.subscribeStates("Self-Clean-Reset");
 
         await this.setObjectNotExistsAsync(`${airconId}.vacant`, {
             type: "state",
@@ -409,7 +404,6 @@ class MHIWFRac extends utils.Adapter {
             },
             native: { "airconId": airconId },
         });
-        //this.subscribeStates("Vacant");
 
         await this.setObjectNotExistsAsync(`${airconId}.apMode`, {
             type: "state",
@@ -422,7 +416,6 @@ class MHIWFRac extends utils.Adapter {
             },
             native: { "airconId": airconId },
         });
-        //this.subscribeStates("AP-Mode");
 
         await this.setObjectNotExistsAsync(`${airconId}.airconId`, {
             type: "state",
@@ -435,7 +428,6 @@ class MHIWFRac extends utils.Adapter {
             },
             native: { "airconId": airconId },
         });
-        //this.subscribeStates("Aircon-ID");
 
         await this.setObjectNotExistsAsync(`${airconId}.macAddress`, {
             type: "state",
@@ -448,7 +440,6 @@ class MHIWFRac extends utils.Adapter {
             },
             native: { "airconId": airconId },
         });
-        //this.subscribeStates("macAddress");
 
         await this.setObjectNotExistsAsync(`${airconId}.ledStatus`, {
             type: "state",
@@ -461,7 +452,6 @@ class MHIWFRac extends utils.Adapter {
             },
             native: { "airconId": airconId },
         });
-        //this.subscribeStates("ledStat");
 
         await this.setObjectNotExistsAsync(`${airconId}.firmwareType`, {
             type: "state",
@@ -474,7 +464,6 @@ class MHIWFRac extends utils.Adapter {
             },
             native: { "airconId": airconId },
         });
-        //this.subscribeStates("Firmware-Type");
 
         await this.setObjectNotExistsAsync(`${airconId}.wirelessFirmwareVersion`, {
             type: "state",
@@ -487,7 +476,6 @@ class MHIWFRac extends utils.Adapter {
             },
             native: { "airconId": airconId },
         });
-        //this.subscribeStates("wirelessFirmwareVersion");
 
         await this.setObjectNotExistsAsync(`${airconId}.mcuFirmwareVersion`, {
             type: "state",
@@ -500,7 +488,6 @@ class MHIWFRac extends utils.Adapter {
             },
             native: { "airconId": airconId },
         });
-        //this.subscribeStates("mcuFirmwareVersion");
 
         await this.setObjectNotExistsAsync(`${airconId}.accounts`, {
             type: "state",
@@ -513,7 +500,6 @@ class MHIWFRac extends utils.Adapter {
             },
             native: { "airconId": airconId },
         });
-        //this.subscribeStates("Accounts");
 
         await this.setObjectNotExistsAsync(`${airconId}.autoHeating`, {
             type: "state",
@@ -526,7 +512,6 @@ class MHIWFRac extends utils.Adapter {
             },
             native: { "airconId": airconId },
         });
-        //this.subscribeStates("Auto-Heating");
     }
 
     async update() {

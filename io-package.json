@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "mhi-wfrac",
-    "version": "2.0.0-alpha.2",
+    "version": "2.0.0",
     "news": {
+      "2.0.0": {
+        "en": "Bring Adapter Stable\nSupport multiple devices\nFix Read Operation Mode 'Auto'\nSet `info.connection` to `false` when adpater is unloading",
+        "de": "Adapter Stable\nUnterstützung mehrerer Geräte\nBetriebsmodus \"Auto\" lesen '\nSetzen Sie `info.connection` auf `false`, wenn Adpater Entladen",
+        "ru": "Принесите адаптер стабильный\nПоддержка нескольких устройств\nОбсуждение Operation Mode 'Auto \"\nУстановите «info.connection» на «false», когда Adpater разгружается",
+        "pt": "Trazer adaptador estável\nSuporte a vários dispositivos\nModo de operação de leitura fixa \"Auto '\nDefinir `info.connection` para `false` quando o adpater está descarregando",
+        "nl": "Adapter stabiel meenemen\nMeerdere apparaten ondersteunen\nLeesmodus 'Automatisch' herstellen '\nInstellen van de verbinding tussen de info en False bij het lossen van adpater",
+        "fr": "Apportez l'adaptateur stable\nPrise en charge de plusieurs appareils\nCorrection automatique du mode d'opération de lecture '\nDéfinir `info.connection` à `false` lors du déchargement",
+        "it": "Porta adattatore stabile\nSupporta più dispositivi\nCorrezione della modalità di funzionamento \"Auto '\nImpostare `info.connection` a `false` quando adpater sta scaricando",
+        "es": "Traiga adaptador Stable\nSoporta múltiples dispositivos\nModo de operación de lectura fija 'Auto '\nSet `info.connection` to `false` when adpater is unload",
+        "pl": "Przynieś stabilny adapter\nObsługa wielu urządzeń\nNapraw tryb odczytu 'Auto'\nUstaw 'info.connection' na 'false' podczas rozładunku adpatera",
+        "uk": "Адаптер Bring Stable\nПідтримка декількох пристроїв\nФіксований режим роботи «Авто Р\nВстановити `info.connection`` для `false` при розвантаженні рекламного майданчика",
+        "zh-cn": "带适配器稳定\n支持多个设备\n修复读取操作模式“ 自动”  '\n将“ info. connection”设定为“ false ” ,用于卸载"
+      },
       "2.0.0-alpha.2": {
         "en": "Bring Adapter Stable\nSupport multiple devices",
         "de": "Adapter Stable\nUnterstützung mehrerer Geräte",

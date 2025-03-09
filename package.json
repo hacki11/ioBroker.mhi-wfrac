@@ -1,6 +1,6 @@
 {
   "name": "iobroker.mhi-wfrac",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0",
   "description": "Mitsubishi Heavy Industries Air Conditioners with WLAN Adapter WF-RAC",
   "author": {
     "name": "hacki11",

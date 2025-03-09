@@ -547,6 +547,7 @@ class MHIWFRac extends utils.Adapter {
             if(this.timeout) {
                 clearTimeout(this.timeout);
             }
+            this.setState("info.connection", false, true);
 
             callback();
         } catch (e) {

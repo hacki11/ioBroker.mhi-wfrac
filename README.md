@@ -39,6 +39,7 @@ Additional functions are already set up, but not integrated right now (de-regist
 * (hacki11) Bring Adapter Stable
 * (hacki11) Support multiple devices
 * (hacki11) Fix Read Operation Mode 'Auto'
+* (hacki11) Set `info.connection` to `false` when adpater is unloading
 
 ### 1.0.2
 * (wolkeSoftware) made Entrust (3D Auto) changeable

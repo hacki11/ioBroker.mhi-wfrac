@@ -5,7 +5,7 @@
  */
 
 const utils = require("@iobroker/adapter-core");
-const AirconData = require("./lib/Device.js");
+const Device = require("./lib/Device.js");
 const axios = require("axios");
 
 const KEY_AIRCON_ID = "airconId";
@@ -47,6 +47,7 @@ class MHIWFRac extends utils.Adapter {
      */
     async onReady() {
         // Reset the connection indicator during startup
+        this.resetConnectionState();
         this.setState("info.connection", false, true);
 
         for (const device of this.config.devices) {
@@ -55,11 +56,6 @@ class MHIWFRac extends utils.Adapter {
                 await this.register(device["ip"], device["name"]);
             }
         }
-        const allRegistered = Object.values(this.devices)
-            .filter(d => d.registered)
-            .length == this.config.devices.length;
-
-        this.setState("info.connection", allRegistered, true);
 
         for (const device of Object.values(this.devices)) {
             this.log.debug("onReady::initIOBStates");
@@ -67,6 +63,18 @@ class MHIWFRac extends utils.Adapter {
         }
 
         this.update();
+    }
+
+    resetConnectionState() {
+        this.getStatesOf((error, states) => {
+            if(states) {
+                for(const state of states) {
+                    if(state._id.endsWith("online")) {
+                        this.setState(state._id, false, true);
+                    }
+                }
+            }
+        });
     }
 
     async setStateVal(id, state) {
@@ -143,8 +151,10 @@ class MHIWFRac extends utils.Adapter {
             await this.setState(`${airconId}.mcuFirmwareVersion`, device.firmwareVersion_mcu, true);
             await this.setState(`${airconId}.accounts`, device.connected_accounts, true);
             await this.setState(`${airconId}.autoHeating`, device.autoHeating, true);
+            await this.setState(`${airconId}.online`, device.online, true);
+
         } catch (e) {
-            this.errorHandler(`Error setting ioBroker state! | ${JSON.stringify(device.airconStat)}`);
+            this.errorHandler(device, `Error setting ioBroker state! | ${JSON.stringify(device.airconStat)}`);
         }
     }
 
@@ -512,6 +522,19 @@ class MHIWFRac extends utils.Adapter {
             },
             native: { "airconId": airconId },
         });
+
+        await this.setObjectNotExistsAsync(`${airconId}.online`, {
+            type: "state",
+            common: {
+                name: "Device Online",
+                type: "boolean",
+                role: "indicator.reachable",
+                read: true,
+                write: false,
+            },
+            native: { "airconId": airconId },
+        });
+        this.subscribeStates(`${airconId}.online`);
     }
 
     async update() {
@@ -519,6 +542,7 @@ class MHIWFRac extends utils.Adapter {
             await this.getDataFromDevice(device);
             await this.setIOBStates(device);
         }
+        this.updateConnectionInfo();
         this.timeout = setTimeout(() => this.update(), (this.config.interval * 1000));
     }
 
@@ -588,51 +612,61 @@ class MHIWFRac extends utils.Adapter {
             .then((response) => {
                 ret.response = response.data;
                 this.log.debug("_post | return: " + cmd + "::" + JSON.stringify(response.data));
-            })
-            .catch((error) => {
-                ret.error = error;
-                this.errorHandler(`_post | Could not get Data: ${error}`);
             });
 
         return ret;
     }
 
-    async update_account_info(address, airconId) {
+    async update_account_info(device) {
         //Update the account info on the airco (sets to operator id of the device)
         const contents = {
             "accountId": OPERATORID,
-            [KEY_AIRCON_ID]: airconId,
+            [KEY_AIRCON_ID]: device.airconId,
             "remote": 0,
             "timezone": TIMEZONE
         };
-        await this._post(address, COMMAND_UPDATE_ACCOUNT_INFO, contents);
+        await this._post(device.airconAddress, COMMAND_UPDATE_ACCOUNT_INFO, contents)
+            .catch(error => this.errorHandler(device, `Failed to update account info on device! | ${error}`));
     }
 
     async register(address, name) {
+        const device = new Device(this.log);
+        device.name = name;
+        device.airconAddress = address;
+
         await this._post(address, COMMAND_GET_DEVICE_INFO)
             .then(async (ret) => {
                 if (ret.error === "") {
                     this.log.debug(`Register(${address}) | return: ${JSON.stringify(ret)}`);
-                    const airconData = new AirconData(this.log);
-                    airconData.name = name;
-                    airconData.airconAddress = address;
-                    airconData.airconId = ret.response.contents.airconId;
-                    airconData.airconApMode = ret.response.contents.apMode;
-                    airconData.airconMac = ret.response.contents.macAddress;
-                    airconData.registered = true;
-                    this.devices[airconData.airconId] = airconData;
+                    device.airconId = ret.response.contents.airconId;
+                    device.airconApMode = ret.response.contents.apMode;
+                    device.airconMac = ret.response.contents.macAddress;
+                    device.online = true;
+                    this.devices[device.airconId] = device;
 
-                    await this.update_account_info(address, airconData.airconId);
+                    await this.update_account_info(device);
                 } else {
-                    this.errorHandler(`Failed to register device! | ${JSON.stringify(ret)}`);
+                    this.errorHandler(device, `Failed to register device! | ${JSON.stringify(ret)}`);
                 }
             })
-            .catch(error => this.errorHandler(`Failed to register device! | ${error}`));
+            .catch(error => this.errorHandler(device, `Failed to register device! | ${error}`));
     }
 
-    errorHandler(error) {
-        this.log.error(error);
-        this.setState("info.connection", true, true);
+    errorHandler(device, error) {
+        this.log.error(`${device.name}: ${error}`);
+        if(device.airconId) {
+            device.online = false;
+            this.setState(`${device.airconId}.online`, false, true);
+        }
+        this.updateConnectionInfo();
+    }
+
+    updateConnectionInfo() {
+        const allOnline = Object.values(this.devices)
+            .filter(d => d.online)
+            .length == this.config.devices.length;
+
+        this.setState("info.connection", allOnline, true);
     }
 
     async getDataFromDevice(device) {
@@ -650,9 +684,10 @@ class MHIWFRac extends utils.Adapter {
                     device.connected_accounts = ret.response.contents.numOfAccount;
                     device.ledStat = ret.response.contents.ledStat;
                     device.autoHeating = ret.response.contents.autoHeating;
+                    device.online = true;
                 }
             })
-            .catch(error => this.errorHandler(`Could not get Data: ${error}`));
+            .catch(error => this.errorHandler(device, `Could not get Data: ${error}`));
     }
 
     async sendDataToDevice(device) {
@@ -667,7 +702,7 @@ class MHIWFRac extends utils.Adapter {
                     device.acCoder.fromBase64(device.airconStat, ret.response.contents.airconStat);
                 }
             })
-            .catch(error => this.errorHandler(`Could not send Data: ${error}`));
+            .catch(error => this.errorHandler(device, `Could not send Data: ${error}`));
     }
 }
 

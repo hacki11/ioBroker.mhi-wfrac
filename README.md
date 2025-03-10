@@ -35,6 +35,10 @@ Additional functions are already set up, but not integrated right now (de-regist
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+* (hacki11) Add online datapoint for each device
+
 ### 2.0.0 (2025-03-09)
 * (hacki11) Bring Adapter Stable
 * (hacki11) Support multiple devices

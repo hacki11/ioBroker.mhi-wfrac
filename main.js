@@ -7,6 +7,17 @@
 const utils = require("@iobroker/adapter-core");
 const Device = require("./lib/Device.js");
 const axios = require("axios");
+const axiosRetry = require("axios-retry").default;
+axiosRetry(axios, {
+    retries: 2,
+    retryDelay: (retryCount) => {
+        return retryCount * 2000;
+    },
+    shouldResetTimeout: true,
+    retryCondition: (_error) => true, // retry no matter what (also on POST)
+});
+
+
 
 const KEY_AIRCON_ID = "airconId";
 const KEY_AIRCON_STAT = "airconStat";

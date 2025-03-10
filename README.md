@@ -38,6 +38,7 @@ Additional functions are already set up, but not integrated right now (de-regist
 
 ### **WORK IN PROGRESS**
 * (hacki11) Add online datapoint for each device
+* (hacki11) Workaround the fact that the WF-RAC is rebooted every hour with a retry
 
 ### 2.0.0 (2025-03-09)
 * (hacki11) Bring Adapter Stable

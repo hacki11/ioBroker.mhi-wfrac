@@ -15,19 +15,6 @@
         "pl": "Przynieś stabilny adapter\nObsługa wielu urządzeń\nNapraw tryb odczytu 'Auto'\nUstaw 'info.connection' na 'false' podczas rozładunku adpatera",
         "uk": "Адаптер Bring Stable\nПідтримка декількох пристроїв\nФіксований режим роботи «Авто Р\nВстановити `info.connection`` для `false` при розвантаженні рекламного майданчика",
         "zh-cn": "带适配器稳定\n支持多个设备\n修复读取操作模式“ 自动”  '\n将“ info. connection”设定为“ false ” ,用于卸载"
-      },
-      "2.0.0-alpha.2": {
-        "en": "Bring Adapter Stable\nSupport multiple devices",
-        "de": "Adapter Stable\nUnterstützung mehrerer Geräte",
-        "ru": "Принесите адаптер стабильный\nПоддержка нескольких устройств",
-        "pt": "Trazer adaptador estável\nSuporte a vários dispositivos",
-        "nl": "Adapter stabiel meenemen\nMeerdere apparaten ondersteunen",
-        "fr": "Apportez l'adaptateur stable\nPrise en charge de plusieurs appareils",
-        "it": "Porta adattatore stabile\nSupporta più dispositivi",
-        "es": "Traiga adaptador Stable\nSoporta múltiples dispositivos",
-        "pl": "Przynieś stabilny adapter\nObsługa wielu urządzeń",
-        "uk": "Адаптер Bring Stable\nПідтримка декількох пристроїв",
-        "zh-cn": "带适配器稳定\n支持多个设备"
       }
     },
     "titleLang": {

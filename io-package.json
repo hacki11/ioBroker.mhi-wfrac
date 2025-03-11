@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "mhi-wfrac",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "news": {
+      "2.1.0": {
+        "en": "Add `online` datapoint representing the reachability of each device\nWorkaround the built-in hourly reboot of the WF-RAC module",
+        "de": "Fügen Sie `online` Datenpunkt, der die Erreichbarkeit jedes Geräts darstellt\nWorkaround des integrierten stündlichen Neustarts des WF-RAC Moduls",
+        "ru": "Добавить «онлайн» точку данных, представляющую доступность каждого устройства\nОбработка встроенной почасовой перезагрузки модуля WF-RAC",
+        "pt": "Adicione o datapoint `online` representando a acessibilidade de cada dispositivo\nSolução da reinicialização por hora do módulo WF-RAC",
+        "nl": "Voeg een datapunt toe dat de bereikbaarheid van elk apparaat weergeeft\nWerk om de ingebouwde uurreboot van de WF-RAC-module",
+        "fr": "Ajouter un point de données `online` représentant l ' accessibilité de chaque dispositif\nRéglage du redémarrage horaire intégré du module WF-RAC",
+        "it": "Aggiungi il datapoint `online' che rappresenta la raggiungibilità di ogni dispositivo\nOperazione del riavvio oraria integrato del modulo WF-RAC",
+        "es": "Añada un punto de datos en línea que represente la capacidad de cada dispositivo\nTrabajar alrededor del reinicio de hora incorporado del módulo WF-RAC",
+        "pl": "Dodać \"online\" punkt danych przedstawiający zdolność każdego urządzenia\nPraca wokół budynku - w godzinowym restarcie modułu WF- RAC",
+        "uk": "Додайте `online` дані, що представляють доступність кожного пристрою\nВедуться перезавантаження модуля WF-RAC",
+        "zh-cn": "添加“在线”数据点,表示每个设备的可达性\n围绕WF-RAC模块的内置小时重启工作"
+      },
       "2.0.0": {
         "en": "Bring Adapter Stable\nSupport multiple devices\nFix Read Operation Mode 'Auto'\nSet `info.connection` to `false` when adpater is unloading",
         "de": "Adapter Stable\nUnterstützung mehrerer Geräte\nBetriebsmodus \"Auto\" lesen '\nSetzen Sie `info.connection` auf `false`, wenn Adpater Entladen",

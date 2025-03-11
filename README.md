@@ -29,8 +29,7 @@ Thank you very much for your work - It really helped me a lot.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 2.1.0 (2025-03-11)
 * (hacki11) Add `online` datapoint representing the reachability of each device
 * (hacki11) Workaround the built-in hourly reboot of the WF-RAC module
 

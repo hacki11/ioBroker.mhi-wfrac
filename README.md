@@ -14,21 +14,15 @@
 
 Mitsubishi Heavy Industries Air Conditioners with WLAN Adapter WF-RAC
 
-This Adapter will give you the opportunity to connect to a localy (WiFi) installed Aircon of Mitsubishi Heavy with an RAC-WiFi-Module.
+This Adapter integrates WF-RAC (Wifi) equipped Mitsubishi Heavy Industries Air Conditioners in ioBroker.
 
-Right now you can get the Information from the Aircon, the function to send Data is already implemented, but there seems to be an error, that I can't find, so the function will be executed, but the data is not set properyly.
-
-This code is based on the original JAVA-implementation of the Android App and the already converted Python-Scripts here:
-https://github.com/jeatheak/Mitsubishi-WF-RAC-Integration
-https://github.com/mcheijink/WF-RAC
+The code is based on 
+- https://github.com/wolkeSoftware/ioBroker.woso_mitsu_aircon_rac
+- https://github.com/W0w3/ioBroker.mhi_aircon 
+- https://github.com/jeatheak/Mitsubishi-WF-RAC-Integration
+- https://github.com/mcheijink/WF-RAC
 
 Thank you very much for your work - It really helped me a lot.
-
-The current code needs a little clean up, but for the first try it should work as a base to get the Informatione and maybe someone finds the error in sending the data?
-Feel free to fix or add some functions.
-
-There are some more things to do - the integration is based on a fixed key for the device and operator. 
-Additional functions are already set up, but not integrated right now (de-register the app from the aircon on unload the module ...)
 
 ## Changelog
 <!--
@@ -37,8 +31,8 @@ Additional functions are already set up, but not integrated right now (de-regist
 -->
 
 ### **WORK IN PROGRESS**
-* (hacki11) Add online datapoint for each device
-* (hacki11) Workaround the fact that the WF-RAC is rebooted every hour with a retry
+* (hacki11) Add `online` datapoint representing the reachability of each device
+* (hacki11) Workaround the built-in hourly reboot of the WF-RAC module
 
 ### 2.0.0 (2025-03-09)
 * (hacki11) Bring Adapter Stable

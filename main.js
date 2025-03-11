@@ -136,7 +136,7 @@ class MHIWFRac extends utils.Adapter {
             await this.setState(`${airconId}.power`, device.airconStat.operation, true);
             await this.setState(`${airconId}.mode`, device.airconStat.operationMode, true);
             await this.setState(`${airconId}.fanSpeed`, device.airconStat.airFlow, true);
-            await this.setState(`${airconId}.model`, device.airconStat.modelNo, true);
+            await this.setState(`${airconId}.model`, device.airconStat.modelNo.toString(), true);
             await this.setState(`${airconId}.indoorTemperature`, device.airconStat.indoorTemp, true);
             await this.setState(`${airconId}.outdoorTemperature`, device.airconStat.outdoorTemp, true);
             await this.setState(`${airconId}.targetTemperature`, device.airconStat.presetTemp, true);

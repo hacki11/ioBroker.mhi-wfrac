@@ -10,14 +10,12 @@ const axios = require("axios");
 const axiosRetry = require("axios-retry").default;
 axiosRetry(axios, {
     retries: 2,
-    retryDelay: (retryCount) => {
+    retryDelay: retryCount => {
         return retryCount * 2000;
     },
     shouldResetTimeout: true,
-    retryCondition: (_error) => true, // retry no matter what (also on POST)
+    retryCondition: _error => true, // retry no matter what (also on POST)
 });
-
-
 
 const KEY_AIRCON_ID = "airconId";
 const KEY_AIRCON_STAT = "airconStat";
@@ -32,13 +30,11 @@ const COMMAND_SET_AIRCON_STAT = "setAirconStat";
 const COMMAND_UPDATE_ACCOUNT_INFO = "updateAccountInfo";
 const COMMAND_GET_AIRCON_STAT = "getAirconStat";
 
-
-const delay = (delayInms) => {
+const delay = delayInms => {
     return new Promise(resolve => setTimeout(resolve, delayInms));
 };
 
 class MHIWFRac extends utils.Adapter {
-
     /**
      * @param {Partial<utils.AdapterOptions>} [options={}]
      */
@@ -78,9 +74,9 @@ class MHIWFRac extends utils.Adapter {
 
     resetConnectionState() {
         this.getStatesOf((error, states) => {
-            if(states) {
-                for(const state of states) {
-                    if(state._id.endsWith("online")) {
+            if (states) {
+                for (const state of states) {
+                    if (state._id.endsWith("online")) {
                         this.setState(state._id, false, true);
                     }
                 }
@@ -140,7 +136,7 @@ class MHIWFRac extends utils.Adapter {
             await this.setState(`${airconId}.power`, device.airconStat.operation, true);
             await this.setState(`${airconId}.mode`, device.airconStat.operationMode, true);
             await this.setState(`${airconId}.fanSpeed`, device.airconStat.airFlow, true);
-            await this.setState(`${airconId}.model`, "" + device.airconStat.modelNo, true);
+            await this.setState(`${airconId}.model`, device.airconStat.modelNo, true);
             await this.setState(`${airconId}.indoorTemperature`, device.airconStat.indoorTemp, true);
             await this.setState(`${airconId}.outdoorTemperature`, device.airconStat.outdoorTemp, true);
             await this.setState(`${airconId}.targetTemperature`, device.airconStat.presetTemp, true);
@@ -163,7 +159,6 @@ class MHIWFRac extends utils.Adapter {
             await this.setState(`${airconId}.accounts`, device.connected_accounts, true);
             await this.setState(`${airconId}.autoHeating`, device.autoHeating, true);
             await this.setState(`${airconId}.online`, device.online, true);
-
         } catch (e) {
             this.errorHandler(device, `Error setting ioBroker state! | ${JSON.stringify(device.airconStat)}`);
         }
@@ -189,7 +184,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: true,
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
         this.subscribeStates(`${airconId}.power`);
 
@@ -203,15 +198,15 @@ class MHIWFRac extends utils.Adapter {
                 write: true,
                 min: 0,
                 max: 4,
-                "states": {
+                states: {
                     0: "Auto",
                     1: "Cool",
                     2: "Hot",
                     3: "Send Air",
-                    4: "Dry"
-                }
+                    4: "Dry",
+                },
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
         this.subscribeStates(`${airconId}.mode`);
 
@@ -230,10 +225,10 @@ class MHIWFRac extends utils.Adapter {
                     1: "min",
                     2: "medium",
                     3: "high",
-                    4: "max"
-                }
+                    4: "max",
+                },
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
         this.subscribeStates(`${airconId}.fanSpeed`);
 
@@ -246,7 +241,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
         this.subscribeStates(`${airconId}.model`);
 
@@ -260,7 +255,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
 
         await this.setObjectNotExistsAsync(`${airconId}.outdoorTemperature`, {
@@ -273,7 +268,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
 
         await this.setObjectNotExistsAsync(`${airconId}.targetTemperature`, {
@@ -287,9 +282,9 @@ class MHIWFRac extends utils.Adapter {
                 write: true,
                 min: 18,
                 max: 30,
-                step: 0.5
+                step: 0.5,
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
         this.subscribeStates(`${airconId}.targetTemperature`);
 
@@ -303,7 +298,7 @@ class MHIWFRac extends utils.Adapter {
                 write: true,
                 min: 0,
                 max: 7,
-                "states": {
+                states: {
                     0: "auto",
                     1: "left",
                     2: "slightly left",
@@ -311,10 +306,10 @@ class MHIWFRac extends utils.Adapter {
                     4: "slightly right",
                     5: "right",
                     6: "wide",
-                    7: "spot"
-                }
+                    7: "spot",
+                },
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
         this.subscribeStates(`${airconId}.swingLeftRight`);
 
@@ -328,15 +323,15 @@ class MHIWFRac extends utils.Adapter {
                 write: true,
                 min: 0,
                 max: 4,
-                "states": {
+                states: {
                     0: "auto",
                     1: "higher",
                     2: "slightly higher",
                     3: "slightly lower",
-                    4: "lower"
-                }
+                    4: "lower",
+                },
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
         this.subscribeStates(`${airconId}.swingVertical`);
 
@@ -349,7 +344,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
 
         await this.setObjectNotExistsAsync(`${airconId}.electric`, {
@@ -362,7 +357,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
 
         await this.setObjectNotExistsAsync(`${airconId}.3dAuto`, {
@@ -374,7 +369,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: true,
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
         this.subscribeStates(`${airconId}.3dAuto`);
 
@@ -387,7 +382,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
 
         await this.setObjectNotExistsAsync(`${airconId}.selfCleanOperation`, {
@@ -399,7 +394,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
 
         await this.setObjectNotExistsAsync(`${airconId}.selfCleanReset`, {
@@ -411,7 +406,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
 
         await this.setObjectNotExistsAsync(`${airconId}.vacant`, {
@@ -423,7 +418,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
 
         await this.setObjectNotExistsAsync(`${airconId}.apMode`, {
@@ -435,7 +430,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
 
         await this.setObjectNotExistsAsync(`${airconId}.airconId`, {
@@ -447,7 +442,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
 
         await this.setObjectNotExistsAsync(`${airconId}.macAddress`, {
@@ -459,7 +454,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
 
         await this.setObjectNotExistsAsync(`${airconId}.ledStatus`, {
@@ -471,7 +466,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
 
         await this.setObjectNotExistsAsync(`${airconId}.firmwareType`, {
@@ -483,7 +478,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
 
         await this.setObjectNotExistsAsync(`${airconId}.wirelessFirmwareVersion`, {
@@ -495,7 +490,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
 
         await this.setObjectNotExistsAsync(`${airconId}.mcuFirmwareVersion`, {
@@ -507,7 +502,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
 
         await this.setObjectNotExistsAsync(`${airconId}.accounts`, {
@@ -519,7 +514,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
 
         await this.setObjectNotExistsAsync(`${airconId}.autoHeating`, {
@@ -531,7 +526,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
 
         await this.setObjectNotExistsAsync(`${airconId}.online`, {
@@ -543,7 +538,7 @@ class MHIWFRac extends utils.Adapter {
                 read: true,
                 write: false,
             },
-            native: { "airconId": airconId },
+            native: { airconId: airconId },
         });
         this.subscribeStates(`${airconId}.online`);
     }
@@ -554,17 +549,18 @@ class MHIWFRac extends utils.Adapter {
             await this.setIOBStates(device);
         }
         this.updateConnectionInfo();
-        this.timeout = setTimeout(() => this.update(), (this.config.interval * 1000));
+        this.timeout = setTimeout(() => this.update(), this.config.interval * 1000);
     }
 
     /**
      * Is called when adapter shuts down - callback has to be called under any circumstances!
+     *
      * @param {() => void} callback
      */
     onUnload(callback) {
         try {
             // Here you must clear all timeouts or intervals that may still be active
-            if(this.timeout) {
+            if (this.timeout) {
                 clearTimeout(this.timeout);
             }
             this.setState("info.connection", false, true);
@@ -577,6 +573,7 @@ class MHIWFRac extends utils.Adapter {
 
     /**
      * Is called if a subscribed state changes
+     *
      * @param {string} id
      * @param {ioBroker.State | null | undefined} state
      */
@@ -595,34 +592,35 @@ class MHIWFRac extends utils.Adapter {
 
     async _post(address, cmd, contents) {
         await delay(2050);
-        const url = "http://" + address + ":" + AIRCON_PORT;
+        const url = `http://${address}:${AIRCON_PORT}`;
 
         const data = {
-            "apiVer": "1.0",
-            "command": cmd,
-            "deviceId": AIRCON_DEVICEID,
-            "operatorId": OPERATORID,
-            "timestamp": Math.floor(Date.now() / 1000),
+            apiVer: "1.0",
+            command: cmd,
+            deviceId: AIRCON_DEVICEID,
+            operatorId: OPERATORID,
+            timestamp: Math.floor(Date.now() / 1000),
         };
         if (contents != "") {
             data["contents"] = contents;
         }
 
         const ret = { error: "", response: {} };
-        this.log.debug("_post | url:" + url + "::data: " + cmd + "::" + JSON.stringify(data));
+        this.log.debug(`_post | url:${url}::data: ${cmd}::${JSON.stringify(data)}`);
 
-        await axios.post(url, data, {
-            timeout: 5000, // Set a timeout of 5 seconds
-            headers: {
-                "Connection": "close",
-                "Content-Type": "application/json;charset=UTF-8",
-                "Access-Control-Allow-Origin": "*",
-                "accept": "application/json",
-            }
-        })
-            .then((response) => {
+        await axios
+            .post(url, data, {
+                timeout: 5000, // Set a timeout of 5 seconds
+                headers: {
+                    Connection: "close",
+                    "Content-Type": "application/json;charset=UTF-8",
+                    "Access-Control-Allow-Origin": "*",
+                    accept: "application/json",
+                },
+            })
+            .then(response => {
                 ret.response = response.data;
-                this.log.debug("_post | return: " + cmd + "::" + JSON.stringify(response.data));
+                this.log.debug(`_post | return: ${cmd}::${JSON.stringify(response.data)}`);
             });
 
         return ret;
@@ -631,13 +629,14 @@ class MHIWFRac extends utils.Adapter {
     async update_account_info(device) {
         //Update the account info on the airco (sets to operator id of the device)
         const contents = {
-            "accountId": OPERATORID,
+            accountId: OPERATORID,
             [KEY_AIRCON_ID]: device.airconId,
-            "remote": 0,
-            "timezone": TIMEZONE
+            remote: 0,
+            timezone: TIMEZONE,
         };
-        await this._post(device.airconAddress, COMMAND_UPDATE_ACCOUNT_INFO, contents)
-            .catch(error => this.errorHandler(device, `Failed to update account info on device! | ${error}`));
+        await this._post(device.airconAddress, COMMAND_UPDATE_ACCOUNT_INFO, contents).catch(error =>
+            this.errorHandler(device, `Failed to update account info on device! | ${error}`),
+        );
     }
 
     async register(address, name) {
@@ -646,7 +645,7 @@ class MHIWFRac extends utils.Adapter {
         device.airconAddress = address;
 
         await this._post(address, COMMAND_GET_DEVICE_INFO)
-            .then(async (ret) => {
+            .then(async ret => {
                 if (ret.error === "") {
                     this.log.debug(`Register(${address}) | return: ${JSON.stringify(ret)}`);
                     device.airconId = ret.response.contents.airconId;
@@ -665,7 +664,7 @@ class MHIWFRac extends utils.Adapter {
 
     errorHandler(device, error) {
         this.log.error(`${device.name}: ${error}`);
-        if(device.airconId) {
+        if (device.airconId) {
             device.online = false;
             this.setState(`${device.airconId}.online`, false, true);
         }
@@ -673,19 +672,17 @@ class MHIWFRac extends utils.Adapter {
     }
 
     updateConnectionInfo() {
-        const allOnline = Object.values(this.devices)
-            .filter(d => d.online)
-            .length == this.config.devices.length;
+        const allOnline = Object.values(this.devices).filter(d => d.online).length == this.config.devices.length;
 
         this.setState("info.connection", allOnline, true);
     }
 
     async getDataFromDevice(device) {
         const contents = {
-            [KEY_AIRCON_ID]: device.airconId
+            [KEY_AIRCON_ID]: device.airconId,
         };
         await this._post(device.airconAddress, COMMAND_GET_AIRCON_STAT, contents)
-            .then((ret) => {
+            .then(ret => {
                 if (ret.error === "") {
                     device.acCoder.fromBase64(device.airconStat, ret.response.contents.airconStat);
                     this.log.debug(`getDataFromDevice | AirconStat::${JSON.stringify(device.airconStat)}`);
@@ -704,11 +701,11 @@ class MHIWFRac extends utils.Adapter {
     async sendDataToDevice(device) {
         const contents = {
             [KEY_AIRCON_ID]: device.airconId,
-            [KEY_AIRCON_STAT]: device.acCoder.toBase64(device.airconStat)
+            [KEY_AIRCON_STAT]: device.acCoder.toBase64(device.airconStat),
         };
 
         await this._post(device.airconAddress, COMMAND_SET_AIRCON_STAT, contents)
-            .then((ret) => {
+            .then(ret => {
                 if (ret.error === "") {
                     device.acCoder.fromBase64(device.airconStat, ret.response.contents.airconStat);
                 }
@@ -722,7 +719,7 @@ if (require.main !== module) {
     /**
      * @param {Partial<utils.AdapterOptions>} [options={}]
      */
-    module.exports = (options) => new MHIWFRac(options);
+    module.exports = options => new MHIWFRac(options);
 } else {
     // otherwise start the instance directly
     new MHIWFRac();

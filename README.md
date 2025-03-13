@@ -29,7 +29,7 @@ Thank you very much for your work - It really helped me a lot.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 2.1.1 (2025-03-13)
 * (hacki11) Migrate to eslint9
 
 ### 2.1.0 (2025-03-11)

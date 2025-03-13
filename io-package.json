@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "mhi-wfrac",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "news": {
+      "2.1.1": {
+        "en": "Migrate to eslint9",
+        "de": "Migrate zu eslint9",
+        "ru": "Миграция в eslint9",
+        "pt": "Migrar para eslint9",
+        "nl": "Migreren naar eslint9",
+        "fr": "Migrer en eslint9",
+        "it": "Migrare a eslint9",
+        "es": "Migrar a eslint9",
+        "pl": "Migracja do eslint9",
+        "uk": "Migrate до eslint9",
+        "zh-cn": "迁移到 eslint9"
+      },
       "2.1.0": {
         "en": "Add `online` datapoint representing the reachability of each device\nWorkaround the built-in hourly reboot of the WF-RAC module",
         "de": "Fügen Sie `online` Datenpunkt, der die Erreichbarkeit jedes Geräts darstellt\nWorkaround des integrierten stündlichen Neustarts des WF-RAC Moduls",

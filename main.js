@@ -53,6 +53,18 @@ class MHIWFRac extends utils.Adapter {
         this.resetConnectionState();
         this.setState("info.connection", false, true);
 
+        // validate interval and set fallback values
+        if (!this.config.interval) {
+            this.log.warn("Interval not set, setting to default value (20s)!");
+            this.config.interval = 20;
+        } else if (this.config.interval > 3600) {
+            this.log.warn("Interval too high, setting to highest value (3600s)!");
+            this.config.interval = 3600;
+        } else if (this.config.interval < 5) {
+            this.log.warn("Interval too low, set to default value (20s)!");
+            this.config.interval = 20;
+        }
+
         for (const device of this.config.devices) {
             if (device["enabled"]) {
                 this.log.debug(`onReady::register(${device["ip"]}/${device["name"]})`);

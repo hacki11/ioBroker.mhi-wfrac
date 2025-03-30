@@ -546,7 +546,7 @@ class MHIWFRac extends utils.Adapter {
             await this.setIOBStates(device);
         }
         this.updateConnectionInfo();
-        this.timeout = setTimeout(() => this.update(), this.config.interval * 1000);
+        this.timeout = this.setTimeout(() => this.update(), this.config.interval * 1000);
     }
 
     /**
@@ -558,7 +558,7 @@ class MHIWFRac extends utils.Adapter {
         try {
             // Here you must clear all timeouts or intervals that may still be active
             if (this.timeout) {
-                clearTimeout(this.timeout);
+                this.clearTimeout(this.timeout);
             }
             this.setState("info.connection", false, true);
 

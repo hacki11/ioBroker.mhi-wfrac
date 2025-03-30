@@ -62,6 +62,7 @@
             "newLine": true,
             "default": 20,
             "min": 5,
+            "max": 3600,
             "xs": 12,
             "sm": 12,
             "md": 6,

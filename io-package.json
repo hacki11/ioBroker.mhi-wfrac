@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "mhi-wfrac",
-    "version": "2.1.1",
+    "version": "2.1.2",
     "news": {
+      "2.1.2": {
+        "en": "Fix review findings",
+        "de": "Ergebnisse der Überprüfung",
+        "ru": "Fix обзор результатов",
+        "pt": "Achados de revisão fixa",
+        "nl": "Bevindingen van de beoordeling vaststellen",
+        "fr": "Fixer les conclusions de l'examen",
+        "it": "Risolvere i risultati delle recensioni",
+        "es": "Determinación de la revisión",
+        "pl": "Ustalenie ustaleń dotyczących przeglądu",
+        "uk": "Виправлення результатів оглядів",
+        "zh-cn": "确定审查结果"
+      },
       "2.1.1": {
         "en": "Migrate to eslint9",
         "de": "Migrate zu eslint9",

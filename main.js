@@ -680,9 +680,10 @@ class MHIWFRac extends utils.Adapter {
     }
 
     updateConnectionInfo() {
-        const allOnline = Object.values(this.devices).filter(d => d.online).length == this.config.devices.length;
+        const enabledDevices = this.config.devices.filter(d => d["enabled"]).length;
+        const onlineDevices = Object.values(this.devices).filter(d => d.online).length;
 
-        this.setState("info.connection", allOnline, true);
+        this.setState("info.connection", enabledDevices == onlineDevices, true);
     }
 
     async getDataFromDevice(device) {

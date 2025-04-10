@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "mhi-wfrac",
-    "version": "2.1.2",
+    "version": "2.1.3",
     "news": {
+      "2.1.3": {
+        "en": "Add Dev Container\nFix: Use only enabled devices for adapter connection indicator",
+        "de": "Hinzufügen von Dev Container\nFix: Verwenden Sie nur aktivierte Geräte für Adapteranschlussanzeige",
+        "ru": "Добавить контейнер Dev\nИсправление: Используйте только включенные устройства для индикатора подключения адаптера",
+        "pt": "Adicionar recipiente de dev\nFix: Use apenas dispositivos habilitados para o indicador de conexão do adaptador",
+        "nl": "Dev Container toevoegen\nFix: Gebruik alleen ingeschakelde apparaten voor adapterverbindingsindicator",
+        "fr": "Ajouter un conteneur Dev\nCorrection: Utiliser uniquement des dispositifs activés pour l'indicateur de connexion de l'adaptateur",
+        "it": "Aggiungi Dev Container\nFix: Utilizzare solo dispositivi abilitati per l'indicatore di connessione dell'adattatore",
+        "es": "Add Dev Container\nFijación: Utilice sólo dispositivos habilitados para el indicador de conexión del adaptador",
+        "pl": "Dodaj kontener Dev\nFix: Użyj tylko włączonych urządzeń do wskaźnika połączenia adaptera",
+        "uk": "Додати Dev Контейнер\nВиправлення: Використовуйте тільки ввімкнені пристрої для індикатора підключення адаптера",
+        "zh-cn": "添加 Dev 容器\nFix: 只为适配器连接指示器使用启用的设备"
+      },
       "2.1.2": {
         "en": "Fix review findings",
         "de": "Ergebnisse der Überprüfung",

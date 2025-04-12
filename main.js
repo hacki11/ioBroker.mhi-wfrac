@@ -672,7 +672,7 @@ class MHIWFRac extends utils.Adapter {
 
     errorHandler(device, error) {
         this.log.error(`${device.name}: ${error}`);
-        if (device.airconId) {
+        if (device.airconIdSanitized) {
             device.online = false;
             this.setState(`${device.airconIdSanitized}.online`, false, true);
         }

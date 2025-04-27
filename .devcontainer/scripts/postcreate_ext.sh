@@ -11,5 +11,5 @@ iob object set system.adapter.mhi-wfrac.0 native.devices[0].enabled=true
 iob object set system.adapter.mhi-wfrac.0 native.devices[1].ip=192.168.1.42
 iob object set system.adapter.mhi-wfrac.0 native.devices[1].enabled=true
 
-iob object set system.adapter.mhi-wfrac.0 native.devices[2].ip=192.168.1.222
-iob object set system.adapter.mhi-wfrac.0 native.devices[2].enabled=false
+iob object set system.adapter.mhi-wfrac.0 native.devices[2].ip=192.168.1.43
+iob object set system.adapter.mhi-wfrac.0 native.devices[2].enabled=true

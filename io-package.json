@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "mhi-wfrac",
-    "version": "2.1.3",
+    "version": "2.1.4",
     "news": {
+      "2.1.4": {
+        "en": "Use sanitized ID to check if online state can be modified",
+        "de": "Verwenden Sie sanitized ID, um zu überprüfen, ob der Online-Zustand geändert werden kann",
+        "ru": "Используйте дезинфицированный идентификатор, чтобы проверить, можно ли изменить состояние онлайн",
+        "pt": "Use ID higienizado para verificar se o estado on-line pode ser modificado",
+        "nl": "Gebruik sanitized ID om te controleren of online status kan worden gewijzigd",
+        "fr": "Utiliser un ID désinfecté pour vérifier si l'état en ligne peut être modifié",
+        "it": "Utilizzare ID igienico per verificare se lo stato online può essere modificato",
+        "es": "Use ID desinfectada para comprobar si el estado en línea puede ser modificado",
+        "pl": "Użyj identyfikatora sanitarnego, aby sprawdzić, czy stan online może być zmodyfikowany",
+        "uk": "Використовуйте санітарний ідентифікатор, щоб перевірити, чи можна змінити онлайн",
+        "zh-cn": "使用已消毒的ID检查在线状态是否可以修改"
+      },
       "2.1.3": {
         "en": "Add Dev Container\nFix: Use only enabled devices for adapter connection indicator",
         "de": "Hinzufügen von Dev Container\nFix: Verwenden Sie nur aktivierte Geräte für Adapteranschlussanzeige",

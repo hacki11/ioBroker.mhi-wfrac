@@ -9,7 +9,7 @@ const Device = require("./lib/Device.js");
 const axios = require("axios");
 const axiosRetry = require("axios-retry").default;
 axiosRetry(axios, {
-    retries: 2,
+    retries: 4,
     retryDelay: retryCount => {
         return retryCount * 2000;
     },
@@ -672,9 +672,10 @@ class MHIWFRac extends utils.Adapter {
 
     errorHandler(device, error) {
         this.log.error(`${device.name}: ${error}`);
-        if (device.airconIdSanitized) {
+        const airconChannel = this.name2id(device.airconId);
+        if (airconChannel) {
             device.online = false;
-            this.setState(`${device.airconIdSanitized}.online`, false, true);
+            this.setState(`${airconChannel}.online`, false, true);
         }
         this.updateConnectionInfo();
     }

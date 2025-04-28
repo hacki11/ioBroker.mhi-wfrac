@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "mhi-wfrac",
-    "version": "2.1.4",
+    "version": "2.1.5",
     "news": {
+      "2.1.5": {
+        "en": "Fix: Errorhandler used undefined aircon channel\nIncreased retry count to workaround hourly aircon resets",
+        "de": "Fix: Errorhandler verwendet undefinierten Aircon-Kanal\nErhöhte Retry-Anzahl, um stündliche Aircon-Resets zu bearbeiten",
+        "ru": "Исправление: Errorhandler использовал неопределенный канал кондиционирования воздуха\nУвеличение количества повторных попыток для обхода почасовых сбросов кондиционеров",
+        "pt": "Fix: Erro usado canal de ar condicionado indefinido\nAumento da contagem de retângulos para reajustar o ar condicionado por hora",
+        "nl": "Fix: Errorhandler gebruikt ongedefinieerd aircon kanaal\nVerhoogde retry count om te werken rond uur aircon resets",
+        "fr": "Correction: Errorhandler utilisé canal aircon non défini\nAugmentation du nombre de réessayes pour réinitialiser l'aérocon horaire",
+        "it": "Fix: Errorhandler usato canale di aircon non definito\nConto di riprovazione aumentato per il funzionamento intorno all'ora reimposta aircon",
+        "es": "Corrección: Mando de error utilizado canal de airecon no definido\nMayor retry count to workaround hourly aircon resets",
+        "pl": "Fix: Errorhandler używany nieokreślony kanał aircon\nZwiększona liczba powtórzeń do pracy wokół godzinowych resetów aircon",
+        "uk": "Виправлення: Помилка використовується невизнаний повітряний канал\nПідвищений кількість птиця для роботизавчасні скидання повітря",
+        "zh-cn": "修补: 错误处理器使用未定义的气孔通道\n增加重试次数,以在每小时的空调上重新工作"
+      },
       "2.1.4": {
         "en": "Use sanitized ID to check if online state can be modified",
         "de": "Verwenden Sie sanitized ID, um zu überprüfen, ob der Online-Zustand geändert werden kann",

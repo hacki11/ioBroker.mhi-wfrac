@@ -30,7 +30,7 @@ Thank you very much for your work - It really helped me a lot.
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-* (hacki11) Fix: `swingUpDown` was not writable
+* (hacki11) Fix: `swingUpDown` was not writeable
 
 ### 2.1.5 (2025-04-28)
 * (hacki11) Fix: Errorhandler used undefined aircon channel

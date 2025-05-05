@@ -342,7 +342,7 @@ class MHIWFRac extends utils.Adapter {
             },
             native: { airconId: airconId },
         });
-        this.subscribeStates(`${airconChannel}.swingVertical`);
+        this.subscribeStates(`${airconChannel}.swingUpDown`);
 
         await this.setObjectNotExistsAsync(`${airconChannel}.coolHotJudge`, {
             type: "state",

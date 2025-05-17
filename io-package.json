@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "mhi-wfrac",
-    "version": "2.1.6",
+    "version": "2.1.7",
     "news": {
+      "2.1.7": {
+        "en": "Set `online` to false on adapter shutdown",
+        "de": "Setzen Sie `online` auf false auf Adapterabschaltung",
+        "ru": "Настройте «онлайн» на ложное выключение адаптера",
+        "pt": "Definir `online` para false no desligamento do adaptador",
+        "nl": "Schakel \"online\" in op \"false\" bij afsluiten van de adapter",
+        "fr": "Set `online` à false sur l`arrêt de l`adaptateur",
+        "it": "Impostare `online` a falso sull'arresto dell'adattatore",
+        "es": "Establecer 'online' a false en el cierre del adaptador",
+        "pl": "Ustaw 'online' na false przy wyłączeniu adaptera",
+        "uk": "Встановити `online` для помилкового відключення адаптера",
+        "zh-cn": "在适配器关闭时设定“ 在线” 为假"
+      },
       "2.1.6": {
         "en": "Fix: `swingUpDown` was not writeable",
         "de": "Fix: `swingUpDown` war nicht schreibbar",
@@ -80,19 +93,6 @@
         "pl": "Migracja do eslint9",
         "uk": "Migrate до eslint9",
         "zh-cn": "迁移到 eslint9"
-      },
-      "2.1.0": {
-        "en": "Add `online` datapoint representing the reachability of each device\nWorkaround the built-in hourly reboot of the WF-RAC module",
-        "de": "Fügen Sie `online` Datenpunkt, der die Erreichbarkeit jedes Geräts darstellt\nWorkaround des integrierten stündlichen Neustarts des WF-RAC Moduls",
-        "ru": "Добавить «онлайн» точку данных, представляющую доступность каждого устройства\nОбработка встроенной почасовой перезагрузки модуля WF-RAC",
-        "pt": "Adicione o datapoint `online` representando a acessibilidade de cada dispositivo\nSolução da reinicialização por hora do módulo WF-RAC",
-        "nl": "Voeg een datapunt toe dat de bereikbaarheid van elk apparaat weergeeft\nWerk om de ingebouwde uurreboot van de WF-RAC-module",
-        "fr": "Ajouter un point de données `online` représentant l ' accessibilité de chaque dispositif\nRéglage du redémarrage horaire intégré du module WF-RAC",
-        "it": "Aggiungi il datapoint `online' che rappresenta la raggiungibilità di ogni dispositivo\nOperazione del riavvio oraria integrato del modulo WF-RAC",
-        "es": "Añada un punto de datos en línea que represente la capacidad de cada dispositivo\nTrabajar alrededor del reinicio de hora incorporado del módulo WF-RAC",
-        "pl": "Dodać \"online\" punkt danych przedstawiający zdolność każdego urządzenia\nPraca wokół budynku - w godzinowym restarcie modułu WF- RAC",
-        "uk": "Додайте `online` дані, що представляють доступність кожного пристрою\nВедуться перезавантаження модуля WF-RAC",
-        "zh-cn": "添加“在线”数据点,表示每个设备的可达性\n围绕WF-RAC模块的内置小时重启工作"
       }
     },
     "titleLang": {

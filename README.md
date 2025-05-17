@@ -29,7 +29,7 @@ Thank you very much for your work - It really helped me a lot.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 2.1.7 (2025-05-17)
 * (hacki11) Set `online` to false on adapter shutdown
 
 ### 2.1.6 (2025-05-05)

@@ -572,6 +572,10 @@ class MHIWFRac extends utils.Adapter {
             if (this.timeout) {
                 this.clearTimeout(this.timeout);
             }
+            // set online state to false for all devices
+            Object.values(this.devices).forEach(device => {
+                this.setOnlineState(device, false);
+            });
             this.setState("info.connection", false, true);
 
             callback();
@@ -672,12 +676,18 @@ class MHIWFRac extends utils.Adapter {
 
     errorHandler(device, error) {
         this.log.error(`${device.name}: ${error}`);
-        const airconChannel = this.name2id(device.airconId);
-        if (airconChannel) {
-            device.online = false;
-            this.setState(`${airconChannel}.online`, false, true);
-        }
+        this.setOnlineState(device, false);
         this.updateConnectionInfo();
+    }
+
+    setOnlineState(device, online) {
+        if (device) {
+            const airconChannel = this.name2id(device.airconId);
+            if (airconChannel) {
+                device.online = online;
+                this.setState(`${airconChannel}.online`, online, true);
+            }
+        }
     }
 
     updateConnectionInfo() {

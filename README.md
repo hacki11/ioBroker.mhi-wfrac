@@ -29,7 +29,7 @@ Thank you very much for your work - It really helped me a lot.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 2.2.0 (2026-02-28)
 * (hacki11) Update dependencies
 * (hacki11) Update minimum node version
 * (hacki11) Fix ioBroker issues

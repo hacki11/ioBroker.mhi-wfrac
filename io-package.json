@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "mhi-wfrac",
-    "version": "2.1.7",
+    "version": "2.2.0",
     "news": {
+      "2.2.0": {
+        "en": "Update dependencies\nUpdate minimum node version\nFix ioBroker issues",
+        "de": "Abhängigkeiten aktualisieren\nMindestknotenversion aktualisieren\nProbleme im Zusammenhang mit der",
+        "ru": "Обновление зависимостей\nОбновление минимальной версии узла\nИсправить проблемы ioBroker",
+        "pt": "Atualizar dependências\nActualizar a versão mínima do nó\nCorrigir problemas do ioBroker",
+        "nl": "Afhankelijkheden bijwerken\nMinimale nodeversie bijwerken\nioBroker-problemen oplossen",
+        "fr": "Mise à jour des dépendances\nMettre à jour la version minimale des nœuds\nCorrection des problèmes ioBroker",
+        "it": "Dipendenze di aggiornamento\nAggiorna la versione minima del nodo\nRisolvere i problemi di ioBroker",
+        "es": "Actualizar las dependencias\nActualizar la versión mínima de los nodos\nProblemas de ioBroker",
+        "pl": "Aktualizuj zależności\nAktualizuj minimalną wersję węzła\nPopraw problemy z joBrokerem",
+        "uk": "Оновлення залежності\nОновлення мінімальної версії вузла\nФіксація ioBroker",
+        "zh-cn": "更新依赖关系\n更新最小节点版本\n解决ioBroker问题"
+      },
       "2.1.7": {
         "en": "Set `online` to false on adapter shutdown",
         "de": "Setzen Sie `online` auf false auf Adapterabschaltung",
@@ -80,19 +93,6 @@
         "pl": "Ustalenie ustaleń dotyczących przeglądu",
         "uk": "Виправлення результатів оглядів",
         "zh-cn": "确定审查结果"
-      },
-      "2.1.1": {
-        "en": "Migrate to eslint9",
-        "de": "Migrate zu eslint9",
-        "ru": "Миграция в eslint9",
-        "pt": "Migrar para eslint9",
-        "nl": "Migreren naar eslint9",
-        "fr": "Migrer en eslint9",
-        "it": "Migrare a eslint9",
-        "es": "Migrar a eslint9",
-        "pl": "Migracja do eslint9",
-        "uk": "Migrate до eslint9",
-        "zh-cn": "迁移到 eslint9"
       }
     },
     "titleLang": {

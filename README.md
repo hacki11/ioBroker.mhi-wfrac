@@ -76,10 +76,8 @@ Thank you very much for your work - It really helped me a lot.
 ## License
 MIT License
 
-Copyright (c) 2025-2026 hacki11
-
-Copyright (c) 2023 W0w3
-
+Copyright (c) 2025-2026 hacki11  
+Copyright (c) 2023 W0w3  
 Copyright (c) 2023 wolkeSoftware
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

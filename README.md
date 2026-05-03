@@ -73,6 +73,8 @@ Thank you very much for your work - It really helped me a lot.
 ### 1.0.1
 * (wolkeSoftware) initial release
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 MIT License
 

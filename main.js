@@ -8,6 +8,12 @@ const utils = require("@iobroker/adapter-core");
 const Device = require("./lib/Device.js");
 const axios = require("axios");
 const axiosRetry = require("axios-retry").default;
+const https = require("https");
+
+// WF-RAC modules use a self-signed certificate on a LAN device. An optional CA cert
+// path can be supplied via adapter config (Phase B); without it we trust on first use.
+const HTTPS_AGENT = new https.Agent({ rejectUnauthorized: false });
+
 axiosRetry(axios, {
     retries: 4,
     retryDelay: retryCount => {
@@ -604,7 +610,10 @@ class MHIWFRac extends utils.Adapter {
     }
 
     async _post(address, cmd, contents) {
-        const url = `http://${address}:${AIRCON_PORT}`;
+        // Firmware v200 ("WF-RAC-HTTPS") requires HTTPS on /beaver/command/<cmd>.
+        // Older firmware (v131 etc.) accepts the same URL shape over HTTPS as well
+        // per the Home Assistant integration's empirical testing.
+        const url = `https://${address}:${AIRCON_PORT}/beaver/command/${cmd}`;
 
         const data = {
             apiVer: "1.0",
@@ -623,6 +632,7 @@ class MHIWFRac extends utils.Adapter {
         await axios
             .post(url, data, {
                 timeout: 5000, // Set a timeout of 5 seconds
+                httpsAgent: HTTPS_AGENT,
                 headers: {
                     Connection: "close",
                     "Content-Type": "application/json;charset=UTF-8",

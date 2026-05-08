@@ -5,5 +5,7 @@
     "hdrGeneric": "Generische Einstellungen",
     "airConditioners": "Klimaanlagen",
     "ipTooltip": "IP-Adresse der Klimaanlage",
-    "name": "Name"
+    "name": "Name",
+    "protocol": "Protokoll",
+    "protocolTooltip": "HTTP/HTTPS automatisch erkennen oder erzwingen. Firmware v200 (\"WF-RAC-HTTPS\") spricht nur HTTPS, ältere Firmware akzeptiert beides."
 }

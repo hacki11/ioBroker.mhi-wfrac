@@ -5,5 +5,7 @@
     "ip": "IP Address",
     "airConditioners": "Air Conditioners",
     "ipTooltip": "IP address of the air conditioner",
-    "name": "Name"
+    "name": "Name",
+    "protocol": "Protocol",
+    "protocolTooltip": "Auto-detect HTTP/HTTPS, or force one. Firmware v200 (\"WF-RAC-HTTPS\") only answers HTTPS; older firmware accepts both."
 }

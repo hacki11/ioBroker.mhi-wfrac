@@ -47,6 +47,21 @@
                     "filter": false,
                     "sort": false,
                     "default": ""
+                },
+                {
+                    "type": "select",
+                    "attr": "protocol",
+                    "width": "16%",
+                    "title": "protocol",
+                    "tooltip": "protocolTooltip",
+                    "options": [
+                        { "value": "auto", "label": "auto" },
+                        { "value": "https", "label": "HTTPS (FW v200+)" },
+                        { "value": "http", "label": "HTTP (legacy FW)" }
+                    ],
+                    "filter": false,
+                    "sort": false,
+                    "default": "auto"
                 }
             ]
         },

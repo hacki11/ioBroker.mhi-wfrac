@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "mhi-wfrac",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "news": {
+      "2.3.0": {
+        "en": "Add support for WF-RAC firmware v200 (HTTPS on /beaver/command/<cmd>).\nAuto-detect HTTP/HTTPS per device on first connect; manual override available in adapter config.\nWarn when updateAccountInfo is rejected (likely operator-slot limit).",
+        "de": "Unterstützung für WF-RAC Firmware v200 (HTTPS auf /beaver/command/<cmd>) hinzugefügt.\nProtokoll wird pro Gerät beim ersten Verbinden automatisch erkannt, manuelle Auswahl in der Adapter-Konfiguration möglich.\nWarnung, wenn updateAccountInfo abgelehnt wird (wahrscheinlich Operator-Slot-Limit erreicht).",
+        "ru": "Добавлена поддержка прошивки WF-RAC v200 (HTTPS на /beaver/command/<cmd>).\nАвтоматическое определение HTTP/HTTPS по устройству при первом подключении; ручной выбор доступен в настройках адаптера.\nПредупреждение, если updateAccountInfo отклонено (вероятно, лимит операторов).",
+        "pt": "Adicionado suporte para o firmware WF-RAC v200 (HTTPS em /beaver/command/<cmd>).\nDetecta HTTP/HTTPS por dispositivo automaticamente; substituição manual disponível na configuração do adaptador.\nAviso quando updateAccountInfo é rejeitado (provavelmente limite de slots de operador).",
+        "nl": "Ondersteuning toegevoegd voor WF-RAC firmware v200 (HTTPS op /beaver/command/<cmd>).\nAutomatische detectie van HTTP/HTTPS per apparaat bij eerste verbinding; handmatige overschrijving beschikbaar in de adapterconfiguratie.\nWaarschuwing wanneer updateAccountInfo wordt afgewezen (waarschijnlijk limiet van operator-slots).",
+        "fr": "Ajout de la prise en charge du firmware WF-RAC v200 (HTTPS sur /beaver/command/<cmd>).\nDétection automatique HTTP/HTTPS par appareil à la première connexion ; remplacement manuel disponible dans la configuration de l'adaptateur.\nAvertissement lorsque updateAccountInfo est rejeté (probablement limite de slots d'opérateur).",
+        "it": "Aggiunto supporto per il firmware WF-RAC v200 (HTTPS su /beaver/command/<cmd>).\nRilevamento automatico HTTP/HTTPS per dispositivo alla prima connessione; override manuale disponibile nella configurazione dell'adattatore.\nAvviso quando updateAccountInfo viene rifiutato (probabilmente limite di slot operatore).",
+        "es": "Añadido soporte para el firmware WF-RAC v200 (HTTPS en /beaver/command/<cmd>).\nDetección automática de HTTP/HTTPS por dispositivo al conectarse por primera vez; anulación manual disponible en la configuración del adaptador.\nAdvertencia cuando updateAccountInfo es rechazado (probable límite de slots de operador).",
+        "pl": "Dodano obsługę firmware'u WF-RAC v200 (HTTPS na /beaver/command/<cmd>).\nAutomatyczne wykrywanie HTTP/HTTPS per urządzenie przy pierwszym połączeniu; ręczne zastąpienie dostępne w konfiguracji adaptera.\nOstrzeżenie, gdy updateAccountInfo zostanie odrzucone (prawdopodobnie limit slotów operatora).",
+        "uk": "Додано підтримку прошивки WF-RAC v200 (HTTPS на /beaver/command/<cmd>).\nАвтоматичне визначення HTTP/HTTPS на пристрій під час першого з’єднання; ручне перевизначення доступне в налаштуваннях адаптера.\nПопередження, коли updateAccountInfo відхиляється (ймовірно ліміт слотів оператора).",
+        "zh-cn": "添加对 WF-RAC 固件 v200（在 /beaver/command/<cmd> 上的 HTTPS）的支持。\n首次连接时按设备自动检测 HTTP/HTTPS；可在适配器配置中手动覆盖。\n当 updateAccountInfo 被拒绝时发出警告（可能达到操作员槽位上限）。"
+      },
       "2.2.0": {
         "en": "Update dependencies\nUpdate minimum node version\nFix ioBroker issues",
         "de": "Abhängigkeiten aktualisieren\nMindestknotenversion aktualisieren\nProbleme im Zusammenhang mit der",

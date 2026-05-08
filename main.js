@@ -6,13 +6,9 @@
 
 const utils = require("@iobroker/adapter-core");
 const Device = require("./lib/Device.js");
+const Connection = require("./lib/Connection.js");
 const axios = require("axios");
 const axiosRetry = require("axios-retry").default;
-const https = require("https");
-
-// WF-RAC modules use a self-signed certificate on a LAN device. An optional CA cert
-// path can be supplied via adapter config (Phase B); without it we trust on first use.
-const HTTPS_AGENT = new https.Agent({ rejectUnauthorized: false });
 
 axiosRetry(axios, {
     retries: 4,
@@ -74,7 +70,7 @@ class MHIWFRac extends utils.Adapter {
         for (const device of this.config.devices) {
             if (device["enabled"]) {
                 this.log.debug(`onReady::register(${device["ip"]}/${device["name"]})`);
-                await this.register(device["ip"], device["name"]);
+                await this.register(device["ip"], device["name"], device);
             }
         }
 
@@ -609,79 +605,52 @@ class MHIWFRac extends utils.Adapter {
         }
     }
 
-    async _post(address, cmd, contents) {
-        // Firmware v200 ("WF-RAC-HTTPS") requires HTTPS on /beaver/command/<cmd>.
-        // Older firmware (v131 etc.) accepts the same URL shape over HTTPS as well
-        // per the Home Assistant integration's empirical testing.
-        const url = `https://${address}:${AIRCON_PORT}/beaver/command/${cmd}`;
-
-        const data = {
-            apiVer: "1.0",
-            command: cmd,
-            deviceId: AIRCON_DEVICEID,
-            operatorId: OPERATORID,
-            timestamp: Math.floor(Date.now() / 1000),
-        };
-        if (contents != "") {
-            data["contents"] = contents;
-        }
-
-        const ret = { error: "", response: {} };
-        this.log.debug(`_post | url:${url}::data: ${cmd}::${JSON.stringify(data)}`);
-
-        await axios
-            .post(url, data, {
-                timeout: 5000, // Set a timeout of 5 seconds
-                httpsAgent: HTTPS_AGENT,
-                headers: {
-                    Connection: "close",
-                    "Content-Type": "application/json;charset=UTF-8",
-                    "Access-Control-Allow-Origin": "*",
-                    accept: "application/json",
-                },
-            })
-            .then(response => {
-                ret.response = response.data;
-                this.log.debug(`_post | return: ${cmd}::${JSON.stringify(response.data)}`);
-            });
-
-        return ret;
-    }
-
     async update_account_info(device) {
-        //Update the account info on the airco (sets to operator id of the device)
         const contents = {
-            accountId: OPERATORID,
+            accountId: device.connection.operatorId,
             [KEY_AIRCON_ID]: device.airconId,
             remote: 0,
             timezone: TIMEZONE,
         };
-        await this._post(device.airconAddress, COMMAND_UPDATE_ACCOUNT_INFO, contents).catch(error =>
-            this.errorHandler(device, `Failed to update account info on device! | ${error}`),
-        );
+        try {
+            const response = await device.connection.send(COMMAND_UPDATE_ACCOUNT_INFO, contents);
+            // result===0 is success; any non-zero typically means the operator slot table is full
+            // (WF-RAC accepts ~4 operator IDs incl. the Smart M-Air apps).
+            if (response && typeof response.result === "number" && response.result !== 0) {
+                this.log.warn(
+                    `${device.name}: updateAccountInfo returned result=${response.result}. ` +
+                        `The WF-RAC may be at its operator-slot limit. ` +
+                        `Free a slot via Smart M-Air, or supply an existing operatorId via config (planned).`,
+                );
+            }
+        } catch (error) {
+            this.errorHandler(device, `Failed to update account info on device! | ${error}`);
+        }
     }
 
-    async register(address, name) {
+    async register(address, name, deviceCfg) {
         const device = new Device(this.log);
         device.name = name;
         device.airconAddress = address;
+        device.connection = new Connection(address, AIRCON_PORT, {
+            logger: this.log,
+            protocol: deviceCfg && deviceCfg.protocol ? deviceCfg.protocol : "auto",
+            operatorId: OPERATORID,
+            deviceId: AIRCON_DEVICEID,
+        });
 
-        await this._post(address, COMMAND_GET_DEVICE_INFO)
-            .then(async ret => {
-                if (ret.error === "") {
-                    this.log.debug(`Register(${address}) | return: ${JSON.stringify(ret)}`);
-                    device.airconId = ret.response.contents.airconId;
-                    device.airconApMode = ret.response.contents.apMode;
-                    device.airconMac = ret.response.contents.macAddress;
-                    device.online = true;
-                    this.devices[device.airconId] = device;
-
-                    await this.update_account_info(device);
-                } else {
-                    this.errorHandler(device, `Failed to register device! | ${JSON.stringify(ret)}`);
-                }
-            })
-            .catch(error => this.errorHandler(device, `Failed to register device! | ${error}`));
+        try {
+            const response = await device.connection.send(COMMAND_GET_DEVICE_INFO);
+            this.log.debug(`Register(${address}) | return: ${JSON.stringify(response)}`);
+            device.airconId = response.contents.airconId;
+            device.airconApMode = response.contents.apMode;
+            device.airconMac = response.contents.macAddress;
+            device.online = true;
+            this.devices[device.airconId] = device;
+            await this.update_account_info(device);
+        } catch (error) {
+            this.errorHandler(device, `Failed to register device! | ${error}`);
+        }
     }
 
     errorHandler(device, error) {
@@ -708,24 +677,21 @@ class MHIWFRac extends utils.Adapter {
     }
 
     async getDataFromDevice(device) {
-        const contents = {
-            [KEY_AIRCON_ID]: device.airconId,
-        };
-        await this._post(device.airconAddress, COMMAND_GET_AIRCON_STAT, contents)
-            .then(ret => {
-                if (ret.error === "") {
-                    device.acCoder.fromBase64(device.airconStat, ret.response.contents.airconStat);
-                    this.log.debug(`getDataFromDevice | AirconStat::${JSON.stringify(device.airconStat)}`);
-                    device.firmwareVersion_wireless = ret.response.contents.wireless.firmVer;
-                    device.firmwareVersion_mcu = ret.response.contents.mcu.firmVer;
-                    device.firmwareType = ret.response.contents.firmType;
-                    device.connected_accounts = ret.response.contents.numOfAccount;
-                    device.ledStat = ret.response.contents.ledStat;
-                    device.autoHeating = ret.response.contents.autoHeating;
-                    device.online = true;
-                }
-            })
-            .catch(error => this.errorHandler(device, `Could not get Data: ${error}`));
+        const contents = { [KEY_AIRCON_ID]: device.airconId };
+        try {
+            const response = await device.connection.send(COMMAND_GET_AIRCON_STAT, contents);
+            device.acCoder.fromBase64(device.airconStat, response.contents.airconStat);
+            this.log.debug(`getDataFromDevice | AirconStat::${JSON.stringify(device.airconStat)}`);
+            device.firmwareVersion_wireless = response.contents.wireless.firmVer;
+            device.firmwareVersion_mcu = response.contents.mcu.firmVer;
+            device.firmwareType = response.contents.firmType;
+            device.connected_accounts = response.contents.numOfAccount;
+            device.ledStat = response.contents.ledStat;
+            device.autoHeating = response.contents.autoHeating;
+            device.online = true;
+        } catch (error) {
+            this.errorHandler(device, `Could not get Data: ${error}`);
+        }
     }
 
     async sendDataToDevice(device) {
@@ -733,14 +699,12 @@ class MHIWFRac extends utils.Adapter {
             [KEY_AIRCON_ID]: device.airconId,
             [KEY_AIRCON_STAT]: device.acCoder.toBase64(device.airconStat),
         };
-
-        await this._post(device.airconAddress, COMMAND_SET_AIRCON_STAT, contents)
-            .then(ret => {
-                if (ret.error === "") {
-                    device.acCoder.fromBase64(device.airconStat, ret.response.contents.airconStat);
-                }
-            })
-            .catch(error => this.errorHandler(device, `Could not send Data: ${error}`));
+        try {
+            const response = await device.connection.send(COMMAND_SET_AIRCON_STAT, contents);
+            device.acCoder.fromBase64(device.airconStat, response.contents.airconStat);
+        } catch (error) {
+            this.errorHandler(device, `Could not send Data: ${error}`);
+        }
     }
 
     name2id(pName) {

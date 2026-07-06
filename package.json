@@ -30,7 +30,7 @@
     "url": "https://github.com/hacki11/ioBroker.mhi-wfrac.git"
   },
   "engines": {
-    "node": ">= 20"
+    "node": ">= 22"
   },
   "dependencies": {
     "@iobroker/adapter-core": "^3.3.2",

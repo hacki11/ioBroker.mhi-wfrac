@@ -1,0 +1,9 @@
+{
+    "airConditioners": "Klimaanlagen",
+    "hdrGeneric": "Generische Einstellungen",
+    "interval": "Anfrageintervall in Sekunden",
+    "ip": "IP-Addesse",
+    "ipTooltip": "IP-Adresse der Klimaanlage",
+    "mhi-wfrac adapter settings": "Adaptereinstellungen für mhi-wfrac",
+    "name": "Name"
+}

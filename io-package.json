@@ -37,7 +37,7 @@
         "nl": "Fix: ",
         "fr": "Correction: `swingUpDown` n'était pas écrivable",
         "it": "Fisso: `swingUpDown` non era scrivibile",
-        "es": "Fix: `swingUpDown` was not writeable",
+        "es": "Corrección: `swingUpDown` no era escribible",
         "pl": "Fix: 'swingUpDown' nie był zapisywalny",
         "uk": "Виправлення: `swingUpDown` не було написано",
         "zh-cn": "修正: \" 向下旋转 \" 无法写入"

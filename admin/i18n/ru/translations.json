@@ -1,9 +1,0 @@
-{
-    "mhi-wfrac adapter settings": "Настройки адаптера для mhi-wfrac",
-    "ip": "IP-Address aircon",
-    "hdrGeneric": "Общие настройки",
-    "airConditioners": "Кондиционеры",
-    "ipTooltip": "IP -адрес кондиционера",
-    "interval": "Интервал запроса за секунды",
-    "name": "Имя"
-}

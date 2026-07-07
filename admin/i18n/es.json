@@ -1,0 +1,10 @@
+{
+    "Enabled": "Activado",
+    "airConditioners": "Acondicionadores de aire",
+    "hdrGeneric": "Configuración genérica",
+    "interval": "Intervalo de solicitud en segundos",
+    "ip": "Dirección IP del aire acondicionado",
+    "ipTooltip": "Dirección IP del aire acondicionado",
+    "mhi-wfrac adapter settings": "Configuración del adaptador para MHI-WFRAC",
+    "name": "Nombre"
+}

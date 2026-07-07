@@ -1,0 +1,9 @@
+{
+    "airConditioners": "Ar condicionado",
+    "hdrGeneric": "Configurações genéricas",
+    "interval": "Solicitar intervalo em segundos",
+    "ip": "Address de IP do Aircon",
+    "ipTooltip": "Endereço IP do ar condicionado",
+    "mhi-wfrac adapter settings": "Configurações do adaptador para mhi-wfrac",
+    "name": "Nome"
+}

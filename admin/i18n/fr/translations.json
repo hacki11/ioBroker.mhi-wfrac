@@ -1,9 +1,0 @@
-{
-    "mhi-wfrac adapter settings": "Paramètres d'adaptateur pour mhi-wfrac",
-    "ip": "IP-Address de l'Aircon",
-    "interval": "Demander l'intervalle en secondes",
-    "hdrGeneric": "Paramètres génériques",
-    "airConditioners": "Climatiseurs",
-    "ipTooltip": "Adresse IP du climatiseur",
-    "name": "Nom"
-}

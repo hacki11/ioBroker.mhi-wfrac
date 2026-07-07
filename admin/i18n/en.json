@@ -1,0 +1,10 @@
+{
+    "Enabled": "Enabled",
+    "airConditioners": "Air Conditioners",
+    "hdrGeneric": "Generic Settings",
+    "interval": "Request interval in seconds",
+    "ip": "IP Address",
+    "ipTooltip": "IP address of the air conditioner",
+    "mhi-wfrac adapter settings": "Adapter settings for mhi-wfrac",
+    "name": "Name"
+}

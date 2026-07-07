@@ -1,0 +1,9 @@
+{
+    "airConditioners": "Airconditioners",
+    "hdrGeneric": "Generieke instellingen",
+    "interval": "Verzoek interval in seconden",
+    "ip": "Ip-adres van de airco",
+    "ipTooltip": "IP -adres van de airconditioner",
+    "mhi-wfrac adapter settings": "Adapterinstellingen voor mhi-wfrac",
+    "name": "Naam"
+}

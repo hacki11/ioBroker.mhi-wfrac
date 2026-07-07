@@ -624,7 +624,7 @@ class MHIWFRac extends utils.Adapter {
         return `${baseUrl}${BEAVER_COMMAND_PATH}/${cmd}`;
     }
 
-    async _postConnection(connection, cmd, contents) {
+    async _postConnection(connection, cmd, contents, options = {}) {
         const url = this.buildDeviceUrl(connection, cmd);
 
         const data = {
@@ -645,6 +645,9 @@ class MHIWFRac extends utils.Adapter {
             .post(url, data, {
                 timeout: 5000, // Set a timeout of 5 seconds
                 httpsAgent: connection.useHttps ? HTTPS_AGENT : undefined,
+                "axios-retry": {
+                    retries: options.disableRetry ? 0 : undefined,
+                },
                 headers: {
                     Connection: "close",
                     "Content-Type": "application/json;charset=UTF-8",
@@ -662,13 +665,13 @@ class MHIWFRac extends utils.Adapter {
 
     async detectDeviceConnection(address) {
         const candidates = [
-            { address, useHttps: true },
             { address, useHttps: false },
+            { address, useHttps: true },
         ];
 
         for (const candidate of candidates) {
             try {
-                const ret = await this._postConnection(candidate, COMMAND_GET_DEVICE_INFO);
+                const ret = await this._postConnection(candidate, COMMAND_GET_DEVICE_INFO, undefined, { disableRetry: true });
                 if (ret.response?.result === 0 && ret.response?.contents?.airconId) {
                     this.log.info(`Detected local API for ${address}: ${candidate.useHttps ? "https" : "http"}`);
                     return {

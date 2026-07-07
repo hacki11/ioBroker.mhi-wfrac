@@ -7,6 +7,7 @@
 const utils = require("@iobroker/adapter-core");
 const Device = require("./lib/Device.js");
 const axios = require("axios");
+const https = require("https");
 const axiosRetry = require("axios-retry").default;
 axiosRetry(axios, {
     retries: 4,
@@ -29,6 +30,8 @@ const COMMAND_GET_DEVICE_INFO = "getDeviceInfo";
 const COMMAND_SET_AIRCON_STAT = "setAirconStat";
 const COMMAND_UPDATE_ACCOUNT_INFO = "updateAccountInfo";
 const COMMAND_GET_AIRCON_STAT = "getAirconStat";
+const BEAVER_COMMAND_PATH = "/beaver/command";
+const HTTPS_AGENT = new https.Agent({ rejectUnauthorized: false });
 
 class MHIWFRac extends utils.Adapter {
     /**
@@ -604,7 +607,25 @@ class MHIWFRac extends utils.Adapter {
     }
 
     async _post(address, cmd, contents) {
-        const url = `http://${address}:${AIRCON_PORT}`;
+        return this._postConnection(
+            {
+                address,
+                useHttps: false,
+            },
+            cmd,
+            contents,
+        );
+    }
+
+    buildDeviceUrl(connection, cmd) {
+        const address = connection.airconAddress || connection.address;
+        const protocol = connection.useHttps ? "https" : "http";
+        const baseUrl = `${protocol}://${address}:${AIRCON_PORT}`;
+        return `${baseUrl}${BEAVER_COMMAND_PATH}/${cmd}`;
+    }
+
+    async _postConnection(connection, cmd, contents) {
+        const url = this.buildDeviceUrl(connection, cmd);
 
         const data = {
             apiVer: "1.0",
@@ -613,7 +634,7 @@ class MHIWFRac extends utils.Adapter {
             operatorId: OPERATORID,
             timestamp: Math.floor(Date.now() / 1000),
         };
-        if (contents != "") {
+        if (contents !== undefined && contents !== "") {
             data["contents"] = contents;
         }
 
@@ -623,6 +644,7 @@ class MHIWFRac extends utils.Adapter {
         await axios
             .post(url, data, {
                 timeout: 5000, // Set a timeout of 5 seconds
+                httpsAgent: connection.useHttps ? HTTPS_AGENT : undefined,
                 headers: {
                     Connection: "close",
                     "Content-Type": "application/json;charset=UTF-8",
@@ -638,6 +660,31 @@ class MHIWFRac extends utils.Adapter {
         return ret;
     }
 
+    async detectDeviceConnection(address) {
+        const candidates = [
+            { address, useHttps: true },
+            { address, useHttps: false },
+        ];
+
+        for (const candidate of candidates) {
+            try {
+                const ret = await this._postConnection(candidate, COMMAND_GET_DEVICE_INFO);
+                if (ret.response?.result === 0 && ret.response?.contents?.airconId) {
+                    this.log.info(`Detected local API for ${address}: ${candidate.useHttps ? "https" : "http"}`);
+                    return {
+                        useHttps: candidate.useHttps,
+                    };
+                }
+            } catch (error) {
+                this.log.debug(
+                    `Device probe failed for ${address} via ${candidate.useHttps ? "https" : "http"}: ${error}`,
+                );
+            }
+        }
+
+        throw new Error(`Unable to detect local API mode for device ${address}`);
+    }
+
     async update_account_info(device) {
         //Update the account info on the airco (sets to operator id of the device)
         const contents = {
@@ -646,7 +693,7 @@ class MHIWFRac extends utils.Adapter {
             remote: 0,
             timezone: TIMEZONE,
         };
-        await this._post(device.airconAddress, COMMAND_UPDATE_ACCOUNT_INFO, contents).catch(error =>
+        await this._postConnection(device, COMMAND_UPDATE_ACCOUNT_INFO, contents).catch(error =>
             this.errorHandler(device, `Failed to update account info on device! | ${error}`),
         );
     }
@@ -656,22 +703,28 @@ class MHIWFRac extends utils.Adapter {
         device.name = name;
         device.airconAddress = address;
 
-        await this._post(address, COMMAND_GET_DEVICE_INFO)
-            .then(async ret => {
-                if (ret.error === "") {
-                    this.log.debug(`Register(${address}) | return: ${JSON.stringify(ret)}`);
-                    device.airconId = ret.response.contents.airconId;
-                    device.airconApMode = ret.response.contents.apMode;
-                    device.airconMac = ret.response.contents.macAddress;
-                    device.online = true;
-                    this.devices[device.airconId] = device;
+        try {
+            Object.assign(device, await this.detectDeviceConnection(address));
 
-                    await this.update_account_info(device);
-                } else {
-                    this.errorHandler(device, `Failed to register device! | ${JSON.stringify(ret)}`);
-                }
-            })
-            .catch(error => this.errorHandler(device, `Failed to register device! | ${error}`));
+            await this._postConnection(device, COMMAND_GET_DEVICE_INFO)
+                .then(async ret => {
+                    if (ret.error === "") {
+                        this.log.debug(`Register(${address}) | return: ${JSON.stringify(ret)}`);
+                        device.airconId = ret.response.contents.airconId;
+                        device.airconApMode = ret.response.contents.apMode;
+                        device.airconMac = ret.response.contents.macAddress;
+                        device.online = true;
+                        this.devices[device.airconId] = device;
+
+                        await this.update_account_info(device);
+                    } else {
+                        this.errorHandler(device, `Failed to register device! | ${JSON.stringify(ret)}`);
+                    }
+                })
+                .catch(error => this.errorHandler(device, `Failed to register device! | ${error}`));
+        } catch (error) {
+            this.errorHandler(device, `Failed to detect local API mode during registration! | ${error}`);
+        }
     }
 
     errorHandler(device, error) {
@@ -701,7 +754,7 @@ class MHIWFRac extends utils.Adapter {
         const contents = {
             [KEY_AIRCON_ID]: device.airconId,
         };
-        await this._post(device.airconAddress, COMMAND_GET_AIRCON_STAT, contents)
+        await this._postConnection(device, COMMAND_GET_AIRCON_STAT, contents)
             .then(ret => {
                 if (ret.error === "") {
                     device.acCoder.fromBase64(device.airconStat, ret.response.contents.airconStat);
@@ -724,7 +777,7 @@ class MHIWFRac extends utils.Adapter {
             [KEY_AIRCON_STAT]: device.acCoder.toBase64(device.airconStat),
         };
 
-        await this._post(device.airconAddress, COMMAND_SET_AIRCON_STAT, contents)
+        await this._postConnection(device, COMMAND_SET_AIRCON_STAT, contents)
             .then(ret => {
                 if (ret.error === "") {
                     device.acCoder.fromBase64(device.airconStat, ret.response.contents.airconStat);

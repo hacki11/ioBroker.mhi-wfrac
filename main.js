@@ -7,7 +7,7 @@
 const utils = require("@iobroker/adapter-core");
 const Device = require("./lib/Device.js");
 const axios = require("axios");
-const https = require("https");
+const https = require("node:https");
 const axiosRetry = require("axios-retry").default;
 axiosRetry(axios, {
     retries: 4,
@@ -671,7 +671,9 @@ class MHIWFRac extends utils.Adapter {
 
         for (const candidate of candidates) {
             try {
-                const ret = await this._postConnection(candidate, COMMAND_GET_DEVICE_INFO, undefined, { disableRetry: true });
+                const ret = await this._postConnection(candidate, COMMAND_GET_DEVICE_INFO, undefined, {
+                    disableRetry: true,
+                });
                 if (ret.response?.result === 0 && ret.response?.contents?.airconId) {
                     this.log.info(`Detected local API for ${address}: ${candidate.useHttps ? "https" : "http"}`);
                     return {

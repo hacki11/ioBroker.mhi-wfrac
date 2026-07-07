@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "mhi-wfrac",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "news": {
+      "2.3.0": {
+        "en": "Adapter requires node.js >= 22 now\nAdd support for WF-RAC firmware v200\nMaintenance work for repo checker warnings and project housekeeping",
+        "de": "Der Adapter benötigt jetzt Node.js >= 22.\nUnterstützung für WF-RAC Firmware v200 hinzufügen\nWartungsarbeiten für Repository-Checker-Warnungen und Projektpflege",
+        "ru": "Для работы адаптера требуется Node.js версии >= 22.\nДобавлена поддержка прошивки WF-RAC версии 200.\nТехническое обслуживание, включающее исправление предупреждений в системе проверки репозиториев и ведение документации по проекту.",
+        "pt": "O adaptador agora requer Node.js >= 22.\nAdicionar suporte para o firmware WF-RAC v200\nTrabalho de manutenção para avisos do verificador de repositório e organização do projeto.",
+        "nl": "De adapter vereist nu Node.js versie 22 of hoger.\nVoeg ondersteuning toe voor WF-RAC firmware v200\nOnderhoudswerkzaamheden voor waarschuwingen van de repositorychecker en projectbeheer.",
+        "fr": "L'adaptateur nécessite désormais Node.js >= 22.\nAjout de la prise en charge du firmware WF-RAC v200\nTravaux de maintenance pour les alertes du vérificateur de repo et la gestion du projet",
+        "it": "L'adattatore ora richiede Node.js >= 22\nAggiunto il supporto per il firmware WF-RAC v200\nLavori di manutenzione per gli avvisi del sistema di controllo dei repo e per la gestione del progetto.",
+        "es": "El adaptador ahora requiere node.js >= 22.\nAgregar compatibilidad con el firmware WF-RAC v200\nTrabajos de mantenimiento para advertencias del verificador de repositorio y tareas de limpieza del proyecto.",
+        "pl": "Adapter wymaga teraz node.js >= 22\nDodano obsługę oprogramowania układowego WF-RAC w wersji 200\nPrace konserwacyjne związane z ostrzeżeniami modułu sprawdzającego repo i porządkowaniem projektu",
+        "uk": "Адаптер тепер вимагає node.js >= 22\nДодано підтримку прошивки WF-RAC версії 200\nТехнічне обслуговування попереджень перевірки репозиторію та ведення проекту",
+        "zh-cn": "适配器现在需要 node.js 版本 >= 22。\n增加对 WF-RAC 固件 v200 的支持\n仓库检查器警告和项目维护工作"
+      },
       "2.2.0": {
         "en": "Update dependencies\nUpdate minimum node version\nFix ioBroker issues",
         "de": "Abhängigkeiten aktualisieren\nMindestknotenversion aktualisieren\nProbleme im Zusammenhang mit der",
@@ -80,19 +93,6 @@
         "pl": "Dodaj kontener Dev\nFix: Użyj tylko włączonych urządzeń do wskaźnika połączenia adaptera",
         "uk": "Додати Dev Контейнер\nВиправлення: Використовуйте тільки ввімкнені пристрої для індикатора підключення адаптера",
         "zh-cn": "添加 Dev 容器\nFix: 只为适配器连接指示器使用启用的设备"
-      },
-      "2.1.2": {
-        "en": "Fix review findings",
-        "de": "Ergebnisse der Überprüfung",
-        "ru": "Fix обзор результатов",
-        "pt": "Achados de revisão fixa",
-        "nl": "Bevindingen van de beoordeling vaststellen",
-        "fr": "Fixer les conclusions de l'examen",
-        "it": "Risolvere i risultati delle recensioni",
-        "es": "Determinación de la revisión",
-        "pl": "Ustalenie ustaleń dotyczących przeglądu",
-        "uk": "Виправлення результатів оглядів",
-        "zh-cn": "确定审查结果"
       }
     },
     "titleLang": {

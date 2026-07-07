@@ -31,6 +31,7 @@ Thank you very much for your work - It really helped me a lot.
 -->
 ### **WORK IN PROGRESS**
 - (copilot) Adapter requires node.js >= 22 now
+- (hacki11) Add support for WF-RAC firmware v200
 
 ### 2.2.0 (2026-02-28)
 * (hacki11) Update dependencies

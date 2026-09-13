@@ -6,5 +6,7 @@
     "ip": "Ip-adres van de airco",
     "ipTooltip": "IP -adres van de airconditioner",
     "mhi-wfrac adapter settings": "Adapterinstellingen voor mhi-wfrac",
-    "name": "Naam"
+    "name": "Naam",
+    "pollFailuresBeforeOffline": "Mislukte pollverzoeken voordat een apparaat offline wordt gemeld",
+    "pollFailuresBeforeOfflineHelp": "De module is ongeveer eens per uur enkele seconden uit zichzelf offline. Mislukte pollverzoeken onder dit aantal worden als debug gelogd en laten het apparaat online."
 }

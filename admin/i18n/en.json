@@ -6,5 +6,7 @@
     "ip": "IP Address",
     "ipTooltip": "IP address of the air conditioner",
     "mhi-wfrac adapter settings": "Adapter settings for mhi-wfrac",
-    "name": "Name"
+    "name": "Name",
+    "pollFailuresBeforeOffline": "Failed polls before a device is reported offline",
+    "pollFailuresBeforeOfflineHelp": "The module goes offline by itself for a few seconds about once an hour. Failed polls below this count are logged at debug level and leave the device online."
 }

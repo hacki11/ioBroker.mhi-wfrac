@@ -6,5 +6,7 @@
     "ip": "IP-Address de l'Aircon",
     "ipTooltip": "Adresse IP du climatiseur",
     "mhi-wfrac adapter settings": "Paramètres d'adaptateur pour mhi-wfrac",
-    "name": "Nom"
+    "name": "Nom",
+    "pollFailuresBeforeOffline": "Échecs d'interrogation avant qu'un appareil soit signalé hors ligne",
+    "pollFailuresBeforeOfflineHelp": "Le module se déconnecte de lui-même quelques secondes environ une fois par heure. Les échecs en dessous de ce nombre sont journalisés en debug et l'appareil reste en ligne."
 }

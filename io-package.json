@@ -167,6 +167,7 @@
   },
   "native": {
     "interval": 20,
+    "pollFailuresBeforeOffline": 3,
     "devices": [
       {}
     ]

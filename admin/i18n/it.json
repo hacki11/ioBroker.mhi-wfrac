@@ -6,5 +6,7 @@
     "ip": "Indirizzo IP dell'Aircon",
     "ipTooltip": "Indirizzo IP del condizionatore d'aria",
     "mhi-wfrac adapter settings": "Impostazioni dell'adattatore per mhi-wfrac",
-    "name": "Nome"
+    "name": "Nome",
+    "pollFailuresBeforeOffline": "Interrogazioni fallite prima di segnalare un dispositivo offline",
+    "pollFailuresBeforeOfflineHelp": "Il modulo si disconnette da solo per alcuni secondi circa una volta all'ora. I tentativi falliti al di sotto di questo numero vengono registrati come debug e il dispositivo resta online."
 }

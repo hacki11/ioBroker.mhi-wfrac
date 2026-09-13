@@ -31,6 +31,13 @@ const COMMAND_SET_AIRCON_STAT = "setAirconStat";
 const COMMAND_UPDATE_ACCOUNT_INFO = "updateAccountInfo";
 const COMMAND_GET_AIRCON_STAT = "getAirconStat";
 const BEAVER_COMMAND_PATH = "/beaver/command";
+// The module reassociates with the WiFi on its own roughly once an hour and is
+// unreachable for a few seconds while it does. Polls that fail during such a
+// window are expected, so a device is only reported offline once this many
+// polls in a row have failed. Configurable, because how many polls such a
+// window covers depends on the request interval.
+const DEFAULT_POLL_FAILURES_BEFORE_OFFLINE = 3;
+const MAX_POLL_FAILURES_BEFORE_OFFLINE = 10;
 const HTTPS_AGENT = new https.Agent({ rejectUnauthorized: false });
 
 class MHIWFRac extends utils.Adapter {
@@ -66,6 +73,21 @@ class MHIWFRac extends utils.Adapter {
         } else if (this.config.interval < 5) {
             this.log.warn("Interval too low, set to default value (20s)!");
             this.config.interval = 20;
+        }
+
+        // validate the failure threshold and set fallback values
+        if (!this.config.pollFailuresBeforeOffline) {
+            this.config.pollFailuresBeforeOffline = DEFAULT_POLL_FAILURES_BEFORE_OFFLINE;
+        } else if (this.config.pollFailuresBeforeOffline > MAX_POLL_FAILURES_BEFORE_OFFLINE) {
+            this.log.warn(
+                `Failed poll threshold too high, setting to highest value (${MAX_POLL_FAILURES_BEFORE_OFFLINE})!`,
+            );
+            this.config.pollFailuresBeforeOffline = MAX_POLL_FAILURES_BEFORE_OFFLINE;
+        } else if (this.config.pollFailuresBeforeOffline < 1) {
+            this.log.warn(
+                `Failed poll threshold too low, setting to default value (${DEFAULT_POLL_FAILURES_BEFORE_OFFLINE})!`,
+            );
+            this.config.pollFailuresBeforeOffline = DEFAULT_POLL_FAILURES_BEFORE_OFFLINE;
         }
 
         for (const device of this.config.devices) {
@@ -738,6 +760,50 @@ class MHIWFRac extends utils.Adapter {
         this.updateConnectionInfo();
     }
 
+    /**
+     * Error handler for failed polls, which - unlike a failed command - are
+     * ridden out: only a run of them means the device is really gone.
+     *
+     * @param {Device} device
+     * @param {string} error
+     */
+    pollErrorHandler(device, error) {
+        device.pollFailures++;
+
+        if (device.pollFailures < this.config.pollFailuresBeforeOffline) {
+            this.log.debug(
+                `${device.name}: ${error} (failed poll ${device.pollFailures} of ${this.config.pollFailuresBeforeOffline}, still considered online)`,
+            );
+            return;
+        }
+
+        if (device.online) {
+            this.log.error(`${device.name}: ${error}`);
+        } else {
+            // Already reported when the device went offline; repeating it on
+            // every poll would fill the log for as long as it stays away.
+            this.log.debug(`${device.name}: ${error}`);
+        }
+
+        this.setOnlineState(device, false);
+        this.updateConnectionInfo();
+    }
+
+    /**
+     * Called after a successful poll: clears the failure count and reports a
+     * device that was offline as back.
+     *
+     * @param {Device} device
+     */
+    pollSucceeded(device) {
+        if (!device.online) {
+            this.log.info(`${device.name}: reachable again after ${device.pollFailures} failed polls`);
+        }
+
+        device.pollFailures = 0;
+        device.online = true;
+    }
+
     setOnlineState(device, online) {
         if (device) {
             const airconChannel = this.name2id(device.airconId);
@@ -770,10 +836,10 @@ class MHIWFRac extends utils.Adapter {
                     device.connected_accounts = ret.response.contents.numOfAccount;
                     device.ledStat = ret.response.contents.ledStat;
                     device.autoHeating = ret.response.contents.autoHeating;
-                    device.online = true;
+                    this.pollSucceeded(device);
                 }
             })
-            .catch(error => this.errorHandler(device, `Could not get Data: ${error}`));
+            .catch(error => this.pollErrorHandler(device, `Could not get Data: ${error}`));
     }
 
     async sendDataToDevice(device) {

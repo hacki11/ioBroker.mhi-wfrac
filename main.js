@@ -34,8 +34,10 @@ const BEAVER_COMMAND_PATH = "/beaver/command";
 // The module reassociates with the WiFi on its own roughly once an hour and is
 // unreachable for a few seconds while it does. Polls that fail during such a
 // window are expected, so a device is only reported offline once this many
-// polls in a row have failed.
-const POLL_FAILURES_BEFORE_OFFLINE = 3;
+// polls in a row have failed. Configurable, because how many polls such a
+// window covers depends on the request interval.
+const DEFAULT_POLL_FAILURES_BEFORE_OFFLINE = 3;
+const MAX_POLL_FAILURES_BEFORE_OFFLINE = 10;
 const HTTPS_AGENT = new https.Agent({ rejectUnauthorized: false });
 
 class MHIWFRac extends utils.Adapter {
@@ -71,6 +73,21 @@ class MHIWFRac extends utils.Adapter {
         } else if (this.config.interval < 5) {
             this.log.warn("Interval too low, set to default value (20s)!");
             this.config.interval = 20;
+        }
+
+        // validate the failure threshold and set fallback values
+        if (!this.config.pollFailuresBeforeOffline) {
+            this.config.pollFailuresBeforeOffline = DEFAULT_POLL_FAILURES_BEFORE_OFFLINE;
+        } else if (this.config.pollFailuresBeforeOffline > MAX_POLL_FAILURES_BEFORE_OFFLINE) {
+            this.log.warn(
+                `Failed poll threshold too high, setting to highest value (${MAX_POLL_FAILURES_BEFORE_OFFLINE})!`,
+            );
+            this.config.pollFailuresBeforeOffline = MAX_POLL_FAILURES_BEFORE_OFFLINE;
+        } else if (this.config.pollFailuresBeforeOffline < 1) {
+            this.log.warn(
+                `Failed poll threshold too low, setting to default value (${DEFAULT_POLL_FAILURES_BEFORE_OFFLINE})!`,
+            );
+            this.config.pollFailuresBeforeOffline = DEFAULT_POLL_FAILURES_BEFORE_OFFLINE;
         }
 
         for (const device of this.config.devices) {
@@ -753,9 +770,9 @@ class MHIWFRac extends utils.Adapter {
     pollErrorHandler(device, error) {
         device.pollFailures++;
 
-        if (device.pollFailures < POLL_FAILURES_BEFORE_OFFLINE) {
+        if (device.pollFailures < this.config.pollFailuresBeforeOffline) {
             this.log.debug(
-                `${device.name}: ${error} (failed poll ${device.pollFailures} of ${POLL_FAILURES_BEFORE_OFFLINE}, still considered online)`,
+                `${device.name}: ${error} (failed poll ${device.pollFailures} of ${this.config.pollFailuresBeforeOffline}, still considered online)`,
             );
             return;
         }

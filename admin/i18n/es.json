@@ -6,5 +6,7 @@
     "ip": "Dirección IP del aire acondicionado",
     "ipTooltip": "Dirección IP del aire acondicionado",
     "mhi-wfrac adapter settings": "Configuración del adaptador para MHI-WFRAC",
-    "name": "Nombre"
+    "name": "Nombre",
+    "pollFailuresBeforeOffline": "Sondeos fallidos antes de marcar un dispositivo como sin conexión",
+    "pollFailuresBeforeOfflineHelp": "El módulo se desconecta por sí solo durante unos segundos aproximadamente una vez por hora. Los fallos por debajo de este número se registran como depuración y el dispositivo sigue en línea."
 }

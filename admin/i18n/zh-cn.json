@@ -6,5 +6,7 @@
     "ip": "空调的IP地址",
     "ipTooltip": "空调的IP地址",
     "mhi-wfrac adapter settings": "mhi-wfrac的适配器设置",
-    "name": "姓名"
+    "name": "姓名",
+    "pollFailuresBeforeOffline": "将设备标记为离线前允许的失败轮询次数",
+    "pollFailuresBeforeOfflineHelp": "模块大约每小时会自行离线数秒。低于此次数的失败轮询仅以调试级别记录，设备保持在线。"
 }

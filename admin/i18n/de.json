@@ -6,5 +6,7 @@
     "ip": "IP-Addesse",
     "ipTooltip": "IP-Adresse der Klimaanlage",
     "mhi-wfrac adapter settings": "Adaptereinstellungen für mhi-wfrac",
-    "name": "Name"
+    "name": "Name",
+    "pollFailuresBeforeOffline": "Fehlversuche, bevor ein Gerät als offline gemeldet wird",
+    "pollFailuresBeforeOfflineHelp": "Das Modul ist etwa einmal pro Stunde für einige Sekunden von sich aus offline. Fehlversuche unterhalb dieser Anzahl werden nur als Debug protokolliert und lassen das Gerät online."
 }

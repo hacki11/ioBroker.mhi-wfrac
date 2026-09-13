@@ -6,5 +6,7 @@
     "ip": "IP-Address aircon",
     "ipTooltip": "IP -адрес кондиционера",
     "mhi-wfrac adapter settings": "Настройки адаптера для mhi-wfrac",
-    "name": "Имя"
+    "name": "Имя",
+    "pollFailuresBeforeOffline": "Неудачных опросов, прежде чем устройство будет отмечено как офлайн",
+    "pollFailuresBeforeOfflineHelp": "Модуль примерно раз в час сам отключается на несколько секунд. Неудачные попытки ниже этого числа записываются как debug, устройство остаётся в сети."
 }

@@ -6,5 +6,7 @@
     "ip": "Zakład IP Aircon",
     "ipTooltip": "Adres IP klimatyzatora",
     "mhi-wfrac adapter settings": "Ustawienia adaptera dla mhi-wfrac",
-    "name": "Nazwa"
+    "name": "Nazwa",
+    "pollFailuresBeforeOffline": "Nieudane odpytania, zanim urządzenie zostanie zgłoszone jako offline",
+    "pollFailuresBeforeOfflineHelp": "Moduł sam rozłącza się na kilka sekund mniej więcej raz na godzinę. Nieudane próby poniżej tej liczby są zapisywane jako debug, a urządzenie pozostaje online."
 }

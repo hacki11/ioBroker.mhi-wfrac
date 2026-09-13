@@ -31,6 +31,7 @@ Thank you very much for your work - It really helped me a lot.
 -->
 ### **WORK IN PROGRESS**
 - (blues-sechseck) Ride out the module's hourly WiFi reassociation: a device is only reported offline after three failed polls in a row, and the error is logged once rather than on every poll
+- (blues-sechseck) Add a setting for how many failed polls a device tolerates before it is reported offline
 
 ### 2.3.0 (2026-07-07)
 - (copilot) Adapter requires node.js >= 22 now

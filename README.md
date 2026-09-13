@@ -29,6 +29,9 @@ Thank you very much for your work - It really helped me a lot.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (blues-sechseck) Ride out the module's hourly WiFi reassociation: a device is only reported offline after three failed polls in a row, and the error is logged once rather than on every poll
+
 ### 2.3.0 (2026-07-07)
 - (copilot) Adapter requires node.js >= 22 now
 - (hacki11) Add support for WF-RAC firmware v200

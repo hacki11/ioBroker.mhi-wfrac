@@ -46,6 +46,8 @@ class MHIWFRac extends utils.Adapter {
         this.on("stateChange", this.onStateChange.bind(this));
         this.on("unload", this.onUnload.bind(this));
         this.devices = {};
+        // devices that could not be registered yet (e.g. unreachable at adapter start) - retried on every update
+        this.pendingDevices = [];
     }
 
     /**
@@ -71,7 +73,9 @@ class MHIWFRac extends utils.Adapter {
         for (const device of this.config.devices) {
             if (device["enabled"]) {
                 this.log.debug(`onReady::register(${device["ip"]}/${device["name"]})`);
-                await this.register(device["ip"], device["name"]);
+                if (!(await this.register(device["ip"], device["name"]))) {
+                    this.pendingDevices.push({ ip: device["ip"], name: device["name"] });
+                }
             }
         }
 
@@ -99,6 +103,11 @@ class MHIWFRac extends utils.Adapter {
         const airconId = await this.getObjectAsync(id).then(obj => obj?.native.airconId);
         const val = state.val;
         const device = this.devices[airconId];
+        if (!device) {
+            // e.g. device not registered (unreachable since adapter start) - would throw on device.airconStat
+            this.log.warn(`Cannot set ${id}: device ${airconId} is not connected`);
+            return;
+        }
         let valchange = 0;
         let idS = "";
         const h = id.split(".");
@@ -171,7 +180,10 @@ class MHIWFRac extends utils.Adapter {
             await this.setState(`${airconChannel}.autoHeating`, device.autoHeating, true);
             await this.setState(`${airconChannel}.online`, device.online, true);
         } catch (e) {
-            this.errorHandler(device, `Error setting ioBroker state! | ${JSON.stringify(device.airconStat)}`);
+            // a problem writing ioBroker states says nothing about the device connection - don't set it offline
+            this.log.warn(
+                `${device.name}: Error setting ioBroker state! | ${e} | ${JSON.stringify(device.airconStat)}`,
+            );
         }
     }
 
@@ -556,6 +568,15 @@ class MHIWFRac extends utils.Adapter {
     }
 
     async update() {
+        // retry registering devices that were not reachable so far - otherwise they stay missing until a restart
+        for (const pending of [...this.pendingDevices]) {
+            const device = await this.register(pending.ip, pending.name, true);
+            if (device) {
+                this.log.info(`${pending.name}: registered after a previous failure`);
+                this.pendingDevices = this.pendingDevices.filter(p => p !== pending);
+                await this.initIOBStates(device);
+            }
+        }
         for (const device of Object.values(this.devices)) {
             await this.getDataFromDevice(device);
             await this.setIOBStates(device);
@@ -598,7 +619,7 @@ class MHIWFRac extends utils.Adapter {
             // The state was changed
             if (state.ack === false) {
                 this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-                this.setStateVal(id, state);
+                this.setStateVal(id, state).catch(e => this.log.error(`Could not set ${id}: ${e}`));
             }
         } else {
             // The state was deleted
@@ -645,9 +666,9 @@ class MHIWFRac extends utils.Adapter {
             .post(url, data, {
                 timeout: 5000, // Set a timeout of 5 seconds
                 httpsAgent: connection.useHttps ? HTTPS_AGENT : undefined,
-                "axios-retry": {
-                    retries: options.disableRetry ? 0 : undefined,
-                },
+                // Only override the retry option when retries are disabled: axios-retry merges this object over the
+                // global config, so `retries: undefined` would replace the configured 4 retries and disable them all.
+                ...(options.disableRetry ? { "axios-retry": { retries: 0 } } : {}),
                 headers: {
                     Connection: "close",
                     "Content-Type": "application/json;charset=UTF-8",
@@ -690,6 +711,19 @@ class MHIWFRac extends utils.Adapter {
         throw new Error(`Unable to detect local API mode for device ${address}`);
     }
 
+    /**
+     * Runs requests to one device one after another: the WF-RAC module handles only one connection at a time,
+     * so a command sent while a poll is running would otherwise time out or be refused (ECONNREFUSED).
+     *
+     * @param {object} device device the request goes to
+     * @param {() => Promise<any>} fn the request
+     */
+    serialize(device, fn) {
+        const run = device.queue.then(fn, fn);
+        device.queue = run.catch(() => {});
+        return run;
+    }
+
     async update_account_info(device) {
         //Update the account info on the airco (sets to operator id of the device)
         const contents = {
@@ -698,15 +732,23 @@ class MHIWFRac extends utils.Adapter {
             remote: 0,
             timezone: TIMEZONE,
         };
-        await this._postConnection(device, COMMAND_UPDATE_ACCOUNT_INFO, contents).catch(error =>
-            this.errorHandler(device, `Failed to update account info on device! | ${error}`),
+        await this.serialize(device, () => this._postConnection(device, COMMAND_UPDATE_ACCOUNT_INFO, contents)).catch(
+            error => this.errorHandler(device, `Failed to update account info on device! | ${error}`),
         );
     }
 
-    async register(address, name) {
+    /**
+     * Registers a device; returns the registered device or null if it could not be reached
+     *
+     * @param {string} address IP address or host name
+     * @param {string} name name from the configuration
+     * @param {boolean} [retry] retry of a device that failed before - log failures at debug level only
+     */
+    async register(address, name, retry = false) {
         const device = new Device(this.log);
         device.name = name;
         device.airconAddress = address;
+        const fail = msg => (retry ? this.log.debug(`${name}: ${msg}`) : this.errorHandler(device, msg));
 
         try {
             Object.assign(device, await this.detectDeviceConnection(address));
@@ -723,19 +765,38 @@ class MHIWFRac extends utils.Adapter {
 
                         await this.update_account_info(device);
                     } else {
-                        this.errorHandler(device, `Failed to register device! | ${JSON.stringify(ret)}`);
+                        fail(`Failed to register device! | ${JSON.stringify(ret)}`);
                     }
                 })
-                .catch(error => this.errorHandler(device, `Failed to register device! | ${error}`));
+                .catch(error => fail(`Failed to register device! | ${error}`));
         } catch (error) {
-            this.errorHandler(device, `Failed to detect local API mode during registration! | ${error}`);
+            fail(`Failed to detect local API mode during registration! | ${error}`);
         }
+        return device.airconId && this.devices[device.airconId] === device ? device : null;
     }
 
     errorHandler(device, error) {
         this.log.error(`${device.name}: ${error}`);
         this.setOnlineState(device, false);
         this.updateConnectionInfo();
+    }
+
+    /**
+     * Polling errors: log only the start of an outage, further failed polls go to debug
+     * (an unreachable module would otherwise log an error every interval).
+     *
+     * @param {object} device - device that failed
+     * @param {string} error - error message
+     */
+    pollErrorHandler(device, error) {
+        if (device.offlineSince) {
+            this.log.debug(`${device.name}: ${error}`);
+            this.setOnlineState(device, false);
+            this.updateConnectionInfo();
+            return;
+        }
+        device.offlineSince = Date.now();
+        this.errorHandler(device, `${error} - further failures are logged at debug level until the device answers again`);
     }
 
     setOnlineState(device, online) {
@@ -759,7 +820,7 @@ class MHIWFRac extends utils.Adapter {
         const contents = {
             [KEY_AIRCON_ID]: device.airconId,
         };
-        await this._postConnection(device, COMMAND_GET_AIRCON_STAT, contents)
+        await this.serialize(device, () => this._postConnection(device, COMMAND_GET_AIRCON_STAT, contents))
             .then(ret => {
                 if (ret.error === "") {
                     device.acCoder.fromBase64(device.airconStat, ret.response.contents.airconStat);
@@ -771,9 +832,14 @@ class MHIWFRac extends utils.Adapter {
                     device.ledStat = ret.response.contents.ledStat;
                     device.autoHeating = ret.response.contents.autoHeating;
                     device.online = true;
+                    if (device.offlineSince) {
+                        const minutes = Math.round((Date.now() - device.offlineSince) / 60000);
+                        this.log.info(`${device.name}: reachable again after ${minutes} min`);
+                        delete device.offlineSince;
+                    }
                 }
             })
-            .catch(error => this.errorHandler(device, `Could not get Data: ${error}`));
+            .catch(error => this.pollErrorHandler(device, `Could not get Data: ${error}`));
     }
 
     async sendDataToDevice(device) {
@@ -782,7 +848,7 @@ class MHIWFRac extends utils.Adapter {
             [KEY_AIRCON_STAT]: device.acCoder.toBase64(device.airconStat),
         };
 
-        await this._postConnection(device, COMMAND_SET_AIRCON_STAT, contents)
+        await this.serialize(device, () => this._postConnection(device, COMMAND_SET_AIRCON_STAT, contents))
             .then(ret => {
                 if (ret.error === "") {
                     device.acCoder.fromBase64(device.airconStat, ret.response.contents.airconStat);

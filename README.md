@@ -29,6 +29,13 @@ Thank you very much for your work - It really helped me a lot.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (Diet1976) Fix: the configured retries (axios-retry) never happened - a single failed request set the device offline (#34)
+- (Diet1976) Fix: devices unreachable at adapter start are registered later instead of missing until a restart
+- (Diet1976) Fix: no unhandled rejection when a state of an unregistered device is written
+- (Diet1976) Fix: an error while writing ioBroker states no longer marks the device offline
+- (Diet1976) Fix: requests to one device are sent one after another (the module handles only one connection)
+
 ### 2.3.0 (2026-07-07)
 - (copilot) Adapter requires node.js >= 22 now
 - (hacki11) Add support for WF-RAC firmware v200
